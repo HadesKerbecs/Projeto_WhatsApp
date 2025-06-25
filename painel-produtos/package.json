@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build-spa": "ng build --browser",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:painel-produtos": "node dist/painel-produtos/server/server.mjs"
@@ -29,6 +30,7 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@angular-devkit/build-angular": "^20.0.4",
     "@angular/build": "^20.0.1",
     "@angular/cli": "^20.0.1",
     "@angular/compiler-cli": "^20.0.0",
