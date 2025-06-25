@@ -1,0 +1,63 @@
+.produto-form-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #f5f7fa;
+}
+
+.produto-form-container {
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+    padding: 2.5rem 2rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+
+    h2 {
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 1.8rem;
+        color: #1e1e2f;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .full-width {
+        width: 100%;
+    }
+
+    .campo input,
+    .campo textarea {
+        font-size: 1.1rem;
+        padding: 0.75rem;
+    }
+
+    .campo textarea {
+        resize: none; // impede que o campo cresça
+        min-height: 80px;
+        max-height: 80px;
+        overflow: auto;
+    }
+
+    .acoes {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    @media (max-width: 600px) {
+        padding: 1.5rem;
+
+        .acoes {
+            justify-content: center;
+        }
+    }
+}

@@ -1,0 +1,37 @@
+<div class="produto-form-wrapper">
+  <div class="produto-form-container">
+    <h2>{{ produtoId ? 'Editar Produto' : 'Novo Produto' }}</h2>
+
+    <form [formGroup]="form" (ngSubmit)="salvar()">
+      <mat-form-field appearance="outline" class="full-width campo">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="nome" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width campo">
+        <mat-label>Preço</mat-label>
+        <input
+          matInput
+          type="text"
+          formControlName="preco"
+          required
+          (input)="aplicarMascara($event)"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width campo">
+        <mat-label>Descrição</mat-label>
+        <textarea matInput formControlName="descricao" required></textarea>
+      </mat-form-field>
+
+      <div class="acoes">
+        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+          {{ produtoId ? 'Atualizar' : 'Salvar' }}
+        </button>
+        <button mat-raised-button color="warn" routerLink="/produtos" type="button">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

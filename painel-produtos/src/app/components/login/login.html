@@ -1,0 +1,21 @@
+<div class="login-wrapper">
+    <div class="login-container">
+        <h2>Login do Administrador</h2>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Usuário</mat-label>
+            <input matInput [(ngModel)]="username" required autocomplete="username"/>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Senha</mat-label>
+            <input matInput [(ngModel)]="password" type="password" name="password" type="password" required
+            autocomplete="current-password"/>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="login()" class="full-width"
+            [disabled]="!username || !password">
+            Entrar
+        </button>
+    </div>
+</div>
