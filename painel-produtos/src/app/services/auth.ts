@@ -1,40 +1,62 @@
 import { Injectable } from '@angular/core';
+import { BACKEND_BASE_URL } from './api';
+import { Observable, of } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { tap, catchError, map } from 'rxjs/operators';
+import { User } from '../interfaces/usuario.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private readonly TOKEN_KEY = 'auth_token';
-  private isBrowser: boolean;
+  private readonly BASE_URL = `${BACKEND_BASE_URL}/auth`;
 
-  constructor() {
-    this.isBrowser = typeof window !== 'undefined' && typeof localStorage !== 'undefined';  
+  constructor(private http: HttpClient) {}
+
+  login(username: string, password: string): Observable<boolean> {
+    return this.http
+      .post<{ token: string }>(
+        `${this.BASE_URL}/login`,
+        { username, password },
+        {
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+        }
+      )
+      .pipe(
+        tap((res) => localStorage.setItem(this.TOKEN_KEY, res.token)),
+        tap(() => console.log('Token salvo com sucesso')),
+        map(() => true),
+        catchError((err) => {
+          console.error('Erro no login', err);
+          return of(false);
+        })
+      );
   }
 
-  login(username: string, password: string): boolean {
-    if (username.trim() && password.trim()) {
-      if(this.isBrowser) {
-        const fakeToken = btoa(`${username}:${password}`);
-        localStorage.setItem(this.TOKEN_KEY, fakeToken);
-      }
-      // FUTURAMENTE: aqui você chamaria uma API real, como:
-      // this.http.post('/api/login', { username, password }).subscribe(...)
-      return true;
-    }
-    return false;
+  registrar(user: User): Observable<User> {
+    return this.http.post<User>(`${this.BASE_URL}/register`, user, {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+    }).pipe(
+      tap(() => console.log('Usuário registrado com sucesso')),
+      catchError((err) => {
+        console.error('Erro no registro', err);
+        throw err; // pode adaptar o erro para tratamento no componente
+      })
+    );
   }
 
   isLoggedIn(): boolean {
-    return this.isBrowser && localStorage.getItem(this.TOKEN_KEY) !== null;
+    return typeof window !== 'undefined' && localStorage.getItem(this.TOKEN_KEY) !== null;
   }
-  
-  logout(): void {
-    if (this.isBrowser) {
-      localStorage.removeItem(this.TOKEN_KEY);
-  }
-}
 
-  getToken():string | null {
-    return this.isBrowser ? localStorage.getItem(this.TOKEN_KEY): null;
+  logout(): void {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(this.TOKEN_KEY);
+    }
+  }
+
+  getToken(): string | null {
+    return typeof window !== 'undefined' ? localStorage.getItem(this.TOKEN_KEY) : null;
   }
 }

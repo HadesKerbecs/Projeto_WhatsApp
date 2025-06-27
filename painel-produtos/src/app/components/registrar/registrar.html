@@ -1,0 +1,19 @@
+<div class="registrar-wrapper">
+  <div class="registrar-container">
+    <h2>Criar Conta</h2>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Usuário</mat-label>
+      <input matInput [(ngModel)]="username" required />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Senha</mat-label>
+      <input matInput [(ngModel)]="password" type="password" required />
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" class="full-width" (click)="registrar()">
+      Registrar
+    </button>
+  </div>
+</div>

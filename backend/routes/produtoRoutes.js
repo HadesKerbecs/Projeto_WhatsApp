@@ -19,4 +19,7 @@ router.put('/:id', productController.atualizar);
 // Remover produto
 router.delete('/:id', productController.remover);
 
+const authMiddleware = require('../middleware/auth');
+router.use(authMiddleware); // protege todas as rotas de produto
+
 module.exports = router;

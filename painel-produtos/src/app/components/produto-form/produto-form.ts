@@ -49,8 +49,8 @@ export class ProdutoForm implements OnInit {
       this.produtoId = id;
       this.produtoService.buscarPorId(id).subscribe({
         next: (produto) => {
-          (this.form.get('preco') as any).setValue(this.formatarParaReal(produto.preco));
           this.form.patchValue(produto);
+          this.form.get('preco')?.setValue(this.formatarParaReal(produto.preco));
         },
         error: () => this.router.navigate(['/produtos'])
       });

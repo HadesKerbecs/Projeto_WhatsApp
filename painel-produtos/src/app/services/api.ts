@@ -4,7 +4,7 @@ import { Produto } from '../interfaces/produto.model';
 // ------------------------
 // 1. Backend próprio (Render + MongoDB)
 // ------------------------
-const BACKEND_BASE_URL = 'https://projeto-whatsapp-a618.onrender.com/api';
+export const BACKEND_BASE_URL = 'https://projeto-whatsapp-a618.onrender.com/api';
 const backendHeaders = {
   'Content-Type': 'application/json',
   // Se usar autenticação JWT, adiciona aqui:
