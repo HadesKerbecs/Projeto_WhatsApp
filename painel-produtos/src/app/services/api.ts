@@ -21,12 +21,12 @@ export const getProductById = async (id: string): Promise<Produto> => {
   return response.data;
 };
 
-export const createProduct = async (product: Omit<Produto, 'id'>): Promise<Produto> => {
+export const createProduct = async (product: Omit<Produto, '_id'>): Promise<Produto> => {
   const response = await axios.post(`${BACKEND_BASE_URL}/produtos`, product, { headers: backendHeaders });
   return response.data;
 };
 
-export const updateProduct = async (id: string, product: Omit<Produto, 'id'>): Promise<Produto> => {
+export const updateProduct = async (id: string, product: Omit<Produto, '_id'>): Promise<Produto> => {
   const response = await axios.put(`${BACKEND_BASE_URL}/produtos/${id}`, product, { headers: backendHeaders });
   return response.data;
 };

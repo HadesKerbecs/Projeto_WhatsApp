@@ -21,11 +21,11 @@ export class ProdutoService {
     return from(getProductById(id));
   }
 
-  criar(produto: Omit<Produto, 'id'>): Observable<Produto> {
+  criar(produto: Omit<Produto, '_id'>): Observable<Produto> {
     return from(createProduct(produto));
   }
 
-  atualizar(id: string, produto: Omit<Produto, 'id'>): Observable<Produto> {
+  atualizar(id: string, produto: Omit<Produto, '_id'>): Observable<Produto> {
     return from(updateProduct(id, produto));
   }
 
