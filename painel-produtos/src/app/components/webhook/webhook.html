@@ -5,12 +5,13 @@
     <h3>Conversas</h3>
 
     <div class="input-icone">
-      <span class="icone">&#128269;</span>
       <input [(ngModel)]="filtro" placeholder="Filtrar clientes..." />
+      <span class="icone">🔍</span>
     </div>
 
     <ul>
-      <li *ngFor="let cliente of clientesUnicos" (click)="selecionarCliente(cliente)"
+      <li *ngFor="let cliente of clientesUnicos" 
+          (click)="selecionarCliente(cliente)"
           [class.selected]="cliente === clienteSelecionado">
         {{ cliente }}
       </li>
@@ -20,7 +21,8 @@
   <div class="chat" *ngIf="clienteSelecionado">
     <h3>Chat com {{ clienteSelecionado }}</h3>
     <div class="mensagens">
-      <div *ngFor="let m of mensagensDoCliente(clienteSelecionado)" [class.bot]="m.bot">
+      <div *ngFor="let m of mensagensDoCliente(clienteSelecionado)" 
+           [class.bot]="m.bot">
         <span>{{ m.mensagem }}</span>
       </div>
     </div>
