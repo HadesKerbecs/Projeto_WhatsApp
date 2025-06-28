@@ -4,6 +4,8 @@
   align-items: center;
   min-height: 100vh;
   background: #f5f7fa;
+  padding: 1rem; /* para não encostar nas bordas em telas pequenas */
+  box-sizing: border-box;
 }
 
 .registrar-container {
@@ -59,3 +61,19 @@ button[mat-raised-button]:disabled {
   cursor: not-allowed;
 }
 
+/* Responsividade para telas menores */
+@media (max-width: 480px) {
+  .registrar-container {
+    padding: 1.5rem 1rem;
+    max-width: 100%;
+  }
+
+  .registrar-container h2 {
+    font-size: 1.5rem;
+  }
+
+  button[mat-raised-button] {
+    font-size: 0.9rem;
+    padding: 0.65rem 0;
+  }
+}

@@ -7,12 +7,9 @@
 .sidebar {
   width: 25%;
   min-width: 250px;
-  max-width: 350px;
   border-right: 1px solid #ddd;
   padding: 1rem;
   background-color: #fff;
-  display: flex;
-  flex-direction: column;
 
   .voltar {
     margin-bottom: 1rem;
@@ -36,30 +33,29 @@
     position: relative;
     margin-bottom: 1rem;
 
-    input {
-      width: 100%;
-      padding: 0.5rem 2rem 0.5rem 2rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 0.95rem;
-    }
-
     .icone {
       position: absolute;
-      left: 8px;
+      left: 10px;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 1rem;
-      color: #666;
+      color: #999;
       pointer-events: none;
+      font-size: 1.1rem; /* melhor tamanho pra lupa */
+    }
+
+    input {
+      width: 100%;
+      padding: 0.5rem 0.5rem 0.5rem 2.5rem; /* espaço pro ícone */
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 1rem;
     }
   }
 
   ul {
     list-style: none;
     padding: 0;
-    flex-grow: 1;
-    overflow-y: auto;
 
     li {
       padding: 0.5rem;
@@ -83,6 +79,10 @@
   flex-direction: column;
   padding: 1rem;
 
+  h3 {
+    margin-bottom: 1rem;
+  }
+
   .mensagens {
     flex: 1;
     overflow-y: auto;
@@ -96,6 +96,7 @@
       background-color: #d1ffd1;
       border-radius: 4px;
       max-width: 70%;
+      word-wrap: break-word;
     }
 
     .bot {
@@ -112,10 +113,34 @@
     input {
       flex: 1;
       padding: 0.5rem;
+      font-size: 1rem;
     }
 
     button {
       padding: 0.5rem 1rem;
+      cursor: pointer;
     }
+  }
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-width: auto;
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.5rem;
+  }
+
+  .chat {
+    width: 100%;
+    flex: none;
+    height: calc(100vh - 250px); /* ajuste a altura conforme necessário */
+    padding: 0.5rem 1rem 1rem 1rem;
   }
 }
