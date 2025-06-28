@@ -1,4 +1,3 @@
-// webhook.component.ts (Angular standalone)
 import { Component, OnInit } from '@angular/core';
 import { Mensagem } from '../../interfaces/mensagem.models';
 import { HttpClient } from '@angular/common/http';
@@ -6,13 +5,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
+import { BACKEND_BASE_URL } from '../../services/api';
+
 @Component({
   selector: 'app-webhook',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './webhook.html',
   styleUrls: ['./webhook.scss']
-
 })
 export class Webhook implements OnInit {
   mensagens: Mensagem[] = [];
@@ -27,7 +27,7 @@ export class Webhook implements OnInit {
   }
 
   carregarMensagens(): void {
-    this.http.get<Mensagem[]>('/api/mensagens').subscribe((dados) => {
+    this.http.get<Mensagem[]>(`${BACKEND_BASE_URL}/mensagens`).subscribe((dados) => {
       this.mensagens = dados;
     });
   }
@@ -46,9 +46,9 @@ export class Webhook implements OnInit {
   }
 
   enviarMensagemManual() {
-    if (!this.novaMensagem.trim()) return;
+    if (!this.novaMensagem.trim() || !this.clienteSelecionado) return;
 
-    this.http.post('/api/mensagens/enviar', {
+    this.http.post(`${BACKEND_BASE_URL}/mensagens/enviar`, {
       cliente: this.clienteSelecionado,
       mensagem: this.novaMensagem
     }).subscribe(() => {
