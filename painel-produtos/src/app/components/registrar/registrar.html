@@ -15,5 +15,8 @@
     <button mat-raised-button color="primary" class="full-width" (click)="registrar()">
       Registrar
     </button>
+    <button mat-raised-button color="warn" routerLink="/login" type="button" [disabled]="!username || !password">
+      Cancelar
+    </button>
   </div>
 </div>
