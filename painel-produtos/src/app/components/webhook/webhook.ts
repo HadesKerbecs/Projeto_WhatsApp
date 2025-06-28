@@ -1,3 +1,4 @@
+// webhook.component.ts (Angular standalone)
 import { Component, OnInit } from '@angular/core';
 import { Mensagem } from '../../interfaces/mensagem.models';
 import { HttpClient } from '@angular/common/http';
@@ -7,15 +8,13 @@ import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-webhook',
-  imports: [
-    CommonModule,
-    FormsModule,
-    RouterModule
-  ],
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './webhook.html',
-  styleUrl: './webhook.scss'
+  styleUrls: ['./webhook.scss']
+
 })
-export class Webhook implements OnInit{
+export class Webhook implements OnInit {
   mensagens: Mensagem[] = [];
   filtro: string = '';
   novaMensagem: string = '';
@@ -24,18 +23,18 @@ export class Webhook implements OnInit{
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    this.carregarMensagens();      
+    this.carregarMensagens();
   }
 
   carregarMensagens(): void {
     this.http.get<Mensagem[]>('/api/mensagens').subscribe((dados) => {
       this.mensagens = dados;
-    })
+    });
   }
 
-  get mensagensFiltradas() {
-    const termo = this.filtro.toLowerCase().trim();
-    return this.mensagens.filter(m => m.cliente.toLowerCase().includes(termo));
+  get clientesUnicos(): string[] {
+    const nomes = new Set(this.mensagens.map(m => m.cliente));
+    return Array.from(nomes);
   }
 
   mensagensDoCliente(cliente: string) {

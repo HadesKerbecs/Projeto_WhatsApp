@@ -3,7 +3,7 @@
     <h3>Conversas</h3>
     <input [(ngModel)]="filtro" placeholder="Filtrar clientes..." />
     <ul>
-      <li *ngFor="let cliente of clientesUnicos" (click)="selecionarCliente(cliente)">
+      <li *ngFor="let cliente of clientesUnicos" (click)="selecionarCliente(cliente)" [class.selected]="cliente === clienteSelecionado">
         {{ cliente }}
       </li>
     </ul>
