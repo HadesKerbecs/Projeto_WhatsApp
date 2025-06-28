@@ -28,13 +28,13 @@ mongoose.connect(mongoUri, {
 });
 
 
-
 // Rotas - importe seu arquivo de rotas aqui (exemplo: ./routes/produtoRoutes)
 const produtoRoutes = require('./routes/produtoRoutes');
 const authRoutes = require('./routes/authRoutes');
+const chatRoutes = require('./routes/chatRoutes');
+app.use('/api/chat', chatRoutes);
 app.use('/api/produtos', produtoRoutes);
 app.use('/api/auth', authRoutes);
-
 
 // Rota raiz (opcional)
 app.get('/', (req, res) => {

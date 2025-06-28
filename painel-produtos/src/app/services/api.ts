@@ -62,23 +62,11 @@ export const sendWhatsAppMessage = async (to: string, message: string) => {
 // ------------------------
 // 3. API do ChatGPT
 // ------------------------
-const CHATGPT_BASE_URL = 'https://api.openai.com/v1/chat/completions';
-const CHATGPT_TOKEN = 'SEU_TOKEN_CHATGPT';
-
-const chatGptHeaders = {
-  Authorization: `Bearer ${CHATGPT_TOKEN}`,
-  'Content-Type': 'application/json',
-};
-
-export const getChatGptResponse = async (messages: any[]) => {
-  const body = {
-    model: 'gpt-4o', // Ajuste conforme sua subscrição
-    messages,
-  };
-
-  const response = await axios.post(CHATGPT_BASE_URL, body, {
-    headers: chatGptHeaders,
-  });
-
-  return response.data.choices[0].message;
+export const enviarMensagemChat = async (mensagem: string): Promise<string> => {
+  const response = await axios.post(
+    `${BACKEND_BASE_URL}/chat`,
+    {mensagem},
+    {headers: getAuthHeaders()}
+  );
+  return response.data.resposta;
 };
