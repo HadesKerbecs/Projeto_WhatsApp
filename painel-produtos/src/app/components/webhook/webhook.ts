@@ -1,10 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { Mensagem } from '../../interfaces/mensagem.models';
 import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-webhook',
-  imports: [],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule
+  ],
   templateUrl: './webhook.html',
   styleUrl: './webhook.scss'
 })
