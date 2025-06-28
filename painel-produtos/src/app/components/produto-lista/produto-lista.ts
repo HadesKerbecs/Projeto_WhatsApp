@@ -31,6 +31,7 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class ProdutoLista implements OnInit {
   produtos: Produto[] = [];
+  produtosFiltrados: Produto[] = [];
 
   @ViewChild('confirmDialog') confirmDialog!: TemplateRef<any>;
   idParaExcluir: string | null = null;
@@ -42,10 +43,10 @@ export class ProdutoLista implements OnInit {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private authService: AuthService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    console.log('ProdutoLista carregado')
+    console.log('ProdutoLista carregado');
     this.carregarProdutos();
   }
 
@@ -53,18 +54,18 @@ export class ProdutoLista implements OnInit {
     this.produtoService.listar().subscribe({
       next: (dados) => {
         this.produtos = dados;
-        this.filtro = this.filtro;
+        this.aplicarFiltro(); // ← aplica filtro após carregar
       },
       error: (erro) => {
         console.error('Erro ao carregar produtos', erro);
-        this.snackBar.open('Erro ao carregar produtos', 'Fechar', { duration: 3000 })
+        this.snackBar.open('Erro ao carregar produtos', 'Fechar', { duration: 3000 });
       }
     });
   }
 
-  get produtosFiltrados(): Produto[] {
+  aplicarFiltro(): void {
     const filtroMinusculo = this.filtro.toLowerCase().trim();
-    return this.produtos.filter(p =>
+    this.produtosFiltrados = this.produtos.filter(p =>
       p.nome.toLowerCase().includes(filtroMinusculo) ||
       p.descricao?.toLowerCase().includes(filtroMinusculo)
     );
@@ -85,9 +86,7 @@ export class ProdutoLista implements OnInit {
 
   abrirConfirmacao(id: string): void {
     this.idParaExcluir = id;
-    this.dialog.open(this.confirmDialog, {
-      data: { id }
-    })
+    this.dialog.open(this.confirmDialog, { data: { id } });
   }
 
   apagarProduto(id: string): void {
@@ -102,3 +101,4 @@ export class ProdutoLista implements OnInit {
     });
   }
 }
+

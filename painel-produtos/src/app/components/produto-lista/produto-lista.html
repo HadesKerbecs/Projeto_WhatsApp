@@ -14,7 +14,10 @@
   <!-- Campo filtro -->
   <mat-form-field appearance="outline" class="full-width campo">
     <mat-label>Filtrar por nome</mat-label>
-    <input matInput [(ngModel)]="filtro" placeholder="Digite para filtrar" autocomplete="off" />
+    <input matInput [(ngModel)]="filtro" (ngModelChange)="aplicarFiltro()"
+    placeholder="Digite para filtrar"
+    autocomplete="off"
+    />
   </mat-form-field>
 
   <!-- Lista filtrada -->
@@ -28,7 +31,8 @@
       <button mat-icon-button [routerLink]="['/produtos/editar', produto._id]" aria-label="Editar produto">
         <mat-icon>edit</mat-icon>
       </button>
-      <button mat-icon-button color="warn" *ngIf="produto._id" (click)="abrirConfirmacao(produto._id)" aria-label="Excluir produto">
+      <button mat-icon-button color="warn" *ngIf="produto._id" (click)="abrirConfirmacao(produto._id)"
+        aria-label="Excluir produto">
         <mat-icon>delete</mat-icon>
       </button>
     </div>
@@ -40,7 +44,8 @@
     <mat-dialog-content>Tem certeza que deseja apagar esse produto?</mat-dialog-content>
     <mat-dialog-actions align="end">
       <button mat-button color="primary" mat-dialog-close>Cancelar</button>
-      <button mat-raised-button color="warn" [disabled]="!idParaExcluir" (click)="apagarProduto(idParaExcluir!)" mat-dialog-close>
+      <button mat-raised-button color="warn" [disabled]="!idParaExcluir" (click)="apagarProduto(idParaExcluir!)"
+        mat-dialog-close>
         Apagar
       </button>
     </mat-dialog-actions>
