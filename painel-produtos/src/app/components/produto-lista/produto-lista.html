@@ -3,12 +3,15 @@
     <h2>Estoque de Produtos</h2>
     <div class="acoes-header">
       <button mat-raised-button color="primary" routerLink="/produtos/novo">
+        <mat-icon>add</mat-icon>
         Novo Produto
       </button>
       <button mat-raised-button color="warn" (click)="logout()">
+        <mat-icon>logout</mat-icon>
         Logout
       </button>
       <button mat-raised-button color="accent" routerLink="/whatsapp">
+        <mat-icon>chat</mat-icon>
         Whatsapp
       </button>
     </div>
@@ -17,11 +20,7 @@
   <!-- Campo filtro -->
   <mat-form-field appearance="outline" class="full-width campo">
     <mat-label>Filtrar por nome</mat-label>
-    <input matInput 
-    [(ngModel)]="filtro"
-    placeholder="Digite para filtrar"
-    autocomplete="off"
-    />
+    <input matInput [(ngModel)]="filtro" placeholder="Digite para filtrar" autocomplete="off" />
   </mat-form-field>
 
   <!-- Lista filtrada -->

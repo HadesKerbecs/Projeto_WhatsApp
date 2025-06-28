@@ -12,7 +12,6 @@
       <input matInput [(ngModel)]="password" type="password" required />
     </mat-form-field>
 
-    <div>
       <button mat-raised-button color="primary" class="full-width" (click)="registrar()"
         [disabled]="!username || !password">
         Registrar
@@ -20,6 +19,5 @@
       <button mat-raised-button color="warn" type="button" (click)="cancelar()">
         Cancelar
       </button>
-    </div>
   </div>
 </div>

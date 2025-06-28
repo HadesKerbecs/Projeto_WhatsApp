@@ -61,6 +61,15 @@ button[mat-raised-button]:disabled {
   cursor: not-allowed;
 }
 
+button[mat-raised-button][color="warn"] {
+  background-color: #d32f2f !important;
+}
+
+button[mat-raised-button][color="warn"]:hover:not(:disabled) {
+  background-color: #b71c1c !important;
+}
+
+
 /* Responsividade para telas menores */
 @media (max-width: 480px) {
   .registrar-container {
