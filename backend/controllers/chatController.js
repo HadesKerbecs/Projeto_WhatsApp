@@ -2,16 +2,18 @@ const axios = require('axios');
 const Product = require('../models/product');
 
 const CHATGPT_API_URL = 'https://api.openai.com/v1/chat/completions';
-const CHATGPT_TOKEN = process.env.CHATGPT_TOKEN; // Coloque no .env seu token da OpenAI
+const CHATGPT_TOKEN = process.env.CHATGPT_TOKEN;
+
+if (!CHATGPT_TOKEN) {
+  console.error('⚠️ Erro: variável de ambiente CHATGPT_TOKEN não definida!');
+}
 
 // Função para montar prompt com produtos
 function montarPrompt(produtos, pergunta) {
-  // Cria um texto resumo com produtos disponíveis
   const listaProdutos = produtos.map(p =>
     `- Nome: ${p.nome}, Preço: R$${p.preco.toFixed(2)}, Descrição: ${p.descricao}`
   ).join('\n');
 
-  // Instrução para o ChatGPT
   const systemPrompt = `
 Você é um assistente de vendas que só pode responder usando as informações dos produtos listados abaixo.
 Não invente produtos que não existem.
@@ -21,42 +23,60 @@ Produtos disponíveis:
 ${listaProdutos}
   `;
 
-  // Monta o array de mensagens para ChatGPT
   return [
     { role: "system", content: systemPrompt },
     { role: "user", content: pergunta }
   ];
 }
 
-// Controller da rota POST /api/chat
 exports.chat = async (req, res) => {
   try {
     const { mensagem } = req.body;
 
-    if (!mensagem) return res.status(400).json({ message: "Mensagem é obrigatória" });
+    if (!mensagem) {
+      return res.status(400).json({ message: "Mensagem é obrigatória" });
+    }
 
-    // Busca produtos no banco
+    // Buscar produtos no banco
     const produtos = await Product.find();
 
-    // Monta prompt com produtos e pergunta do usuário
+    // Montar mensagens para o GPT
     const messages = montarPrompt(produtos, mensagem);
 
+    // Debug: mostrar prompt no console
+    console.log('Prompt para OpenAI:', messages);
+
     // Chamada para API OpenAI
-    const response = await axios.post(CHATGPT_API_URL, {
-      model: 'gpt-4o',  // ou 'gpt-3.5-turbo' se preferir algo mais barato
-      messages,
-    }, {
-      headers: {
-        Authorization: `Bearer ${CHATGPT_TOKEN}`,
-        'Content-Type': 'application/json'
+    const response = await axios.post(
+      CHATGPT_API_URL,
+      {
+        model: 'gpt-3.5-turbo',
+        messages,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${CHATGPT_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
       }
-    });
+    );
 
     const resposta = response.data.choices[0].message.content;
-    res.json({ resposta });
+    return res.json({ resposta });
 
   } catch (error) {
-    console.error('Erro no chat com ChatGPT:', error.response?.data || error.message);
-    res.status(500).json({ message: 'Erro ao processar chat' });
+    if (error.response) {
+      // Erro retornado pela OpenAI
+      console.error('Erro na resposta da OpenAI:', error.response.data);
+      // Enviar detalhe do erro no dev (cuidado em produção)
+      return res.status(error.response.status || 500).json({
+        message: 'Erro na API da OpenAI',
+        details: error.response.data,
+      });
+    } else {
+      // Erro genérico (ex: problemas de rede)
+      console.error('Erro desconhecido:', error.message);
+      return res.status(500).json({ message: 'Erro ao processar chat' });
+    }
   }
 };
