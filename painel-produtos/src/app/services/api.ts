@@ -5,34 +5,33 @@ import { Produto } from '../interfaces/produto.model';
 // 1. Backend próprio (Render + MongoDB)
 // ------------------------
 export const BACKEND_BASE_URL = 'https://projeto-whatsapp-a618.onrender.com/api';
-const backendHeaders = {
+const getAuthHeaders = () => ({
   'Content-Type': 'application/json',
-  // Se usar autenticação JWT, adiciona aqui:
-  // Authorization: `Bearer ${SEU_TOKEN}`,
-};
+  Authorization: `Bearer ${localStorage.getItem('auth_token') || ''}`,
+});
 
 export const getProducts = async (): Promise<Produto[]> => {
-  const response = await axios.get(`${BACKEND_BASE_URL}/produtos`, { headers: backendHeaders });
+  const response = await axios.get(`${BACKEND_BASE_URL}/produtos`, { headers: getAuthHeaders() });
   return response.data;
 };
 
 export const getProductById = async (id: string): Promise<Produto> => {
-  const response = await axios.get(`${BACKEND_BASE_URL}/produtos/${id}`, { headers: backendHeaders });
+  const response = await axios.get(`${BACKEND_BASE_URL}/produtos/${id}`, { headers: getAuthHeaders() });
   return response.data;
 };
 
 export const createProduct = async (product: Omit<Produto, '_id'>): Promise<Produto> => {
-  const response = await axios.post(`${BACKEND_BASE_URL}/produtos`, product, { headers: backendHeaders });
+  const response = await axios.post(`${BACKEND_BASE_URL}/produtos`, product, { headers: getAuthHeaders() });
   return response.data;
 };
 
 export const updateProduct = async (id: string, product: Omit<Produto, '_id'>): Promise<Produto> => {
-  const response = await axios.put(`${BACKEND_BASE_URL}/produtos/${id}`, product, { headers: backendHeaders });
+  const response = await axios.put(`${BACKEND_BASE_URL}/produtos/${id}`, product, { headers: getAuthHeaders() });
   return response.data;
 };
 
 export const deleteProduct = async (id: string): Promise<void> => {
-  await axios.delete(`${BACKEND_BASE_URL}/produtos/${id}`, { headers: backendHeaders });
+  await axios.delete(`${BACKEND_BASE_URL}/produtos/${id}`, { headers: getAuthHeaders() });
 };
 
 // ------------------------

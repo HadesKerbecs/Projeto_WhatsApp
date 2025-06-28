@@ -53,6 +53,7 @@ export class ProdutoLista implements OnInit {
   carregarProdutos(): void {
     this.produtoService.listar().subscribe({
       next: (dados) => {
+        console.log('Produtos recebidos:', dados);
         this.produtos = dados;
         this.aplicarFiltro(); // ← aplica filtro após carregar
       },
