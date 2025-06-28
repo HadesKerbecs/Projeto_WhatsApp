@@ -31,7 +31,6 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class ProdutoLista implements OnInit {
   produtos: Produto[] = [];
-  produtosFiltrados: Produto[] = [];
 
   @ViewChild('confirmDialog') confirmDialog!: TemplateRef<any>;
   idParaExcluir: string | null = null;
@@ -55,7 +54,6 @@ export class ProdutoLista implements OnInit {
       next: (dados) => {
         console.log('Produtos recebidos:', dados);
         this.produtos = dados;
-        this.aplicarFiltro(); // ← aplica filtro após carregar
       },
       error: (erro) => {
         console.error('Erro ao carregar produtos', erro);
@@ -64,9 +62,9 @@ export class ProdutoLista implements OnInit {
     });
   }
 
-  aplicarFiltro(): void {
+  get produtosFiltrados(): Produto[] {
     const filtroMinusculo = this.filtro.toLowerCase().trim();
-    this.produtosFiltrados = this.produtos.filter(p =>
+    return this.produtos.filter(p =>
       p.nome.toLowerCase().includes(filtroMinusculo) ||
       p.descricao?.toLowerCase().includes(filtroMinusculo)
     );
@@ -102,4 +100,3 @@ export class ProdutoLista implements OnInit {
     });
   }
 }
-
