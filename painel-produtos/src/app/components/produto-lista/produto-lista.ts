@@ -12,6 +12,7 @@ import { AuthService } from '../../services/auth';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-produto-lista',
@@ -41,7 +42,8 @@ export class ProdutoLista implements OnInit {
     private router: Router,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -54,6 +56,7 @@ export class ProdutoLista implements OnInit {
       next: (dados) => {
         console.log('Produtos recebidos:', dados);
         this.produtos = dados;
+        this.cdr.detectChanges(); 
       },
       error: (erro) => {
         console.error('Erro ao carregar produtos', erro);
