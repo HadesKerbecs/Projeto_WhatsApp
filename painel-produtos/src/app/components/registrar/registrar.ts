@@ -30,4 +30,9 @@ export class Registrar {
       error: () => alert('Erro ao registrar usuário!')
     });
   }
+
+  cancelar(): void {
+    this.router.navigate(['/login']);
+  }
+
 }

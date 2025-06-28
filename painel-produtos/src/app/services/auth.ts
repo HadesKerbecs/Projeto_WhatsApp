@@ -35,7 +35,7 @@ export class AuthService {
   }
 
   registrar(user: User): Observable<User> {
-    return this.http.post<User>(`${this.BASE_URL}/register`, user, {
+    return this.http.post<User>(`${this.BASE_URL}/api/auth/register`, user, {
       headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
     }).pipe(
       tap(() => console.log('Usuário registrado com sucesso')),

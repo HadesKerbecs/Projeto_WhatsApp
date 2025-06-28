@@ -33,7 +33,7 @@ mongoose.connect(mongoUri, {
 const produtoRoutes = require('./routes/produtoRoutes');
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/produtos', produtoRoutes);
-app.use('/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 
 
 // Rota raiz (opcional)
