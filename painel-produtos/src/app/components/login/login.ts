@@ -25,14 +25,14 @@ export class Login {
   constructor(private authService: AuthService, private router: Router) { }
 
   login(): void {
-    const success = this.authService.login(this.username, this.password);
-
-    if (success) {
-      console.log('Login bem-sucedido, redirecionando...');
-
-      this.router.navigate(['/produtos']);
-    } else {
-      alert('Usuário ou senha inválidos.')
-    }
+    this.authService.login(this.username, this.password).subscribe((success) => {
+      if (success) {
+        console.log('Login bem-sucedido, redirecionando...');
+  
+        this.router.navigate(['/produtos']);
+      } else {
+        alert('Usuário ou senha inválidos.')
+      }
+    });
   }
 }
