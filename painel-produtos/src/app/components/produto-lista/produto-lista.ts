@@ -53,6 +53,7 @@ export class ProdutoLista implements OnInit {
     this.produtoService.listar().subscribe({
       next: (dados) => {
         this.produtos = dados;
+        this.filtro = this.filtro;
       },
       error: (erro) => {
         console.error('Erro ao carregar produtos', erro);
