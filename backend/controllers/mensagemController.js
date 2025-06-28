@@ -2,10 +2,12 @@ const Mensagem = require('../models/mensagem');
 const axios = require('axios'); // para envio via API WhatsApp se quiser
 
 exports.listarMensagens = async (req, res) => {
+  console.log('Listar mensagens chamada');
   try {
     const mensagens = await Mensagem.find().sort({ data: 1 });
     res.json(mensagens);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Erro ao listar mensagens' });
   }
 };
