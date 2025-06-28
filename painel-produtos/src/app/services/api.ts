@@ -37,7 +37,7 @@ export const deleteProduct = async (id: string): Promise<void> => {
 // ------------------------
 // 2. API do WhatsApp
 // ------------------------
-const WHATSAPP_BASE_URL = 'https://api.whatsapp.com/v1'; // Troque pela URL correta da sua API WhatsApp
+const WHATSAPP_BASE_URL = 'https://graph.facebook.com/v19.0/YOUR_PHONE_NUMBER_ID';
 const WHATSAPP_TOKEN = 'SEU_TOKEN_WHATSAPP';
 
 const whatsappHeaders = {
@@ -47,6 +47,7 @@ const whatsappHeaders = {
 
 export const sendWhatsAppMessage = async (to: string, message: string) => {
   const body = {
+    messaging_product: 'whatsapp',
     to,
     type: 'text',
     text: { body: message },

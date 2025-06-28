@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="sidebar">
+    <h3>Conversas</h3>
+    <input [(ngModel)]="filtro" placeholder="Filtrar clientes..." />
+    <ul>
+      <li *ngFor="let cliente of clientesUnicos" (click)="selecionarCliente(cliente)">
+        {{ cliente }}
+      </li>
+    </ul>
+  </div>
+
+  <div class="chat" *ngIf="clienteSelecionado">
+    <h3>Chat com {{ clienteSelecionado }}</h3>
+    <div class="mensagens">
+      <div *ngFor="let m of mensagensDoCliente(clienteSelecionado)" [class.bot]="m.bot">
+        <span>{{ m.mensagem }}</span>
+      </div>
+    </div>
+
+    <div class="resposta">
+      <input [(ngModel)]="novaMensagem" placeholder="Digite uma resposta..." />
+      <button (click)="enviarMensagemManual()">Enviar</button>
+    </div>
+  </div>
+</div>
