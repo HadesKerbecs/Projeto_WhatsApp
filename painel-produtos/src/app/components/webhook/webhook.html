@@ -1,9 +1,17 @@
 <div class="container">
   <div class="sidebar">
+    <button class="voltar" routerLink="/produtos">← Voltar</button>
+
     <h3>Conversas</h3>
-    <input [(ngModel)]="filtro" placeholder="Filtrar clientes..." />
+
+    <div class="input-icone">
+      <span class="icone">&#128269;</span>
+      <input [(ngModel)]="filtro" placeholder="Filtrar clientes..." />
+    </div>
+
     <ul>
-      <li *ngFor="let cliente of clientesUnicos" (click)="selecionarCliente(cliente)" [class.selected]="cliente === clienteSelecionado">
+      <li *ngFor="let cliente of clientesUnicos" (click)="selecionarCliente(cliente)"
+          [class.selected]="cliente === clienteSelecionado">
         {{ cliente }}
       </li>
     </ul>
