@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ProdutoService } from '../../services/produto';
-import { Router, RouterModule } from '@angular/router';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Produto } from '../../interfaces/produto.model';
@@ -44,7 +44,13 @@ export class ProdutoLista implements OnInit {
     private snackBar: MatSnackBar,
     private authService: AuthService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd && event.url === '/produtos') {
+        this.carregarProdutos();
+      }
+    });
+  }
 
   ngOnInit(): void {
     console.log('ProdutoLista carregado');
@@ -56,7 +62,7 @@ export class ProdutoLista implements OnInit {
       next: (dados) => {
         console.log('Produtos recebidos:', dados);
         this.produtos = dados;
-        this.cdr.detectChanges(); 
+        this.cdr.detectChanges();
       },
       error: (erro) => {
         console.error('Erro ao carregar produtos', erro);

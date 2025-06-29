@@ -121,7 +121,13 @@ export class Webhook implements OnInit {
   }
 
   voltar() {
-    // Verifique se esta rota está correta para seu aplicativo
-    this.router.navigate(['/produtos']); // ou a rota desejada
+    this.router.navigate(['/produtos']).then(() => {
+      const currentUrl = this.router.url;
+      if (currentUrl === '/produtos') {
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this.router.navigate(['/produtos']);
+        });
+      }
+    });
   }
 }
