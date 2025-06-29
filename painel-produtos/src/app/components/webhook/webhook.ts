@@ -27,7 +27,7 @@ export class Webhook implements OnInit {
     private http: HttpClient,
     private cdr: ChangeDetectorRef,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.carregarMensagens();
@@ -35,7 +35,7 @@ export class Webhook implements OnInit {
 
   carregarMensagens(): void {
     if (this.carregandoMensagens) return;
-    
+
     this.carregandoMensagens = true;
     this.http.get<Mensagem[]>(`${BACKEND_BASE_URL}/mensagens`)
       .pipe(distinctUntilChanged())
@@ -67,14 +67,14 @@ export class Webhook implements OnInit {
   get clientesUnicos(): string[] {
     const nomes = new Set(this.mensagens.map(m => m.cliente));
     const clientes = Array.from(nomes);
-    
+
     if (this.filtro.trim()) {
       const termo = this.filtro.toLowerCase();
-      return clientes.filter(cliente => 
+      return clientes.filter(cliente =>
         cliente.toLowerCase().includes(termo)
       );
     }
-    
+
     return clientes;
   }
 
@@ -90,6 +90,11 @@ export class Webhook implements OnInit {
       this.clienteSelecionado = cliente;
       this.cdr.detectChanges();
     }
+  }
+
+  atualizarFiltro() {
+    // Força a atualização da lista de clientes
+    this.cdr.detectChanges();
   }
 
   enviarMensagemManual() {
@@ -116,6 +121,7 @@ export class Webhook implements OnInit {
   }
 
   voltar() {
-    this.router.navigate(['/produtos']);
+    // Verifique se esta rota está correta para seu aplicativo
+    this.router.navigate(['/produtos']); // ou a rota desejada
   }
 }
