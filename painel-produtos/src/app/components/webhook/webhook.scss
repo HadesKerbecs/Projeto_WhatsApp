@@ -11,6 +11,12 @@
   padding: 1rem;
   background-color: #fff;
 
+  display: flex;
+  flex-direction: column;
+
+  max-height: 100vh;
+  overflow-y: auto;
+
   .voltar {
     margin-bottom: 1rem;
     background-color: #eee;
@@ -108,13 +114,13 @@
       gap: 0.5rem;
 
       &.bot {
-        align-self: flex-start;
-        background-color: #e0e0e0;
+        align-self: flex-end;
+        background-color: #c8e6c9;
       }
 
       &.user {
-        align-self: flex-end;
-        background-color: #c8e6c9;
+        align-self: flex-start;
+        background-color: #e0e0e0;
       }
 
       .texto {
