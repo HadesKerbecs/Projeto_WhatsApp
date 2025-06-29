@@ -5,7 +5,8 @@ const mensagemSchema = new mongoose.Schema({
   mensagem: String,
   bot: Boolean,
   data: { type: Date, default: Date.now },
-  hora: String
+  hora: String,
+  empresaId: String
 });
 
 module.exports = mongoose.model('Mensagem', mensagemSchema);

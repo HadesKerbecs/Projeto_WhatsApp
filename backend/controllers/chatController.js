@@ -8,7 +8,6 @@ if (!CHATGPT_TOKEN) {
   console.error('⚠️ Erro: variável de ambiente CHATGPT_TOKEN não definida!');
 }
 
-// Função para montar prompt com produtos
 function montarPrompt(produtos, pergunta) {
   const listaProdutos = produtos.map(p =>
     `- Nome: ${p.nome}, Preço: R$${p.preco.toFixed(2)}, Descrição: ${p.descricao}`
@@ -37,8 +36,8 @@ exports.chat = async (req, res) => {
       return res.status(400).json({ message: "Mensagem é obrigatória" });
     }
 
-    // Buscar produtos no banco
-    const produtos = await Product.find();
+    // Buscar apenas produtos da empresa do usuário logado
+    const produtos = await Product.find({ empresaId: req.user.empresaId });
 
     // Montar mensagens para o GPT
     const messages = montarPrompt(produtos, mensagem);
@@ -66,15 +65,12 @@ exports.chat = async (req, res) => {
 
   } catch (error) {
     if (error.response) {
-      // Erro retornado pela OpenAI
       console.error('Erro na resposta da OpenAI:', error.response.data);
-      // Enviar detalhe do erro no dev (cuidado em produção)
       return res.status(error.response.status || 500).json({
         message: 'Erro na API da OpenAI',
         details: error.response.data,
       });
     } else {
-      // Erro genérico (ex: problemas de rede)
       console.error('Erro desconhecido:', error.message);
       return res.status(500).json({ message: 'Erro ao processar chat' });
     }

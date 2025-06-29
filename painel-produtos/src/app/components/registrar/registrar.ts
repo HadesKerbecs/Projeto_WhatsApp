@@ -20,11 +20,12 @@ import { FormsModule } from '@angular/forms';
 export class Registrar {
   username = '';
   password = '';
+  empresaId = '';
 
   constructor(private authService: AuthService, private router: Router) { }
 
   registrar(): void {
-    const user = { username: this.username, password: this.password };
+    const user = { username: this.username, password: this.password, empresaId: this.empresaId };
     this.authService.registrar(user).subscribe({
       next: () => this.router.navigate(['/login']),
       error: () => alert('Erro ao registrar usuário!')

@@ -1,10 +1,10 @@
 const Mensagem = require('../models/mensagem');
-const axios = require('axios'); // para envio via API WhatsApp se quiser
+const axios = require('axios');
 
 exports.listarMensagens = async (req, res) => {
   console.log('Listar mensagens chamada');
   try {
-    const mensagens = await Mensagem.find().sort({ data: 1 });
+    const mensagens = await Mensagem.find({ empresaId: req.user.empresaId }).sort({ data: 1 });
     res.json(mensagens);
   } catch (err) {
     console.error(err);
@@ -20,12 +20,12 @@ exports.enviarMensagem = async (req, res) => {
       cliente, 
       mensagem, 
       bot: false,
-      status: 'enviando',  // status inicial
-      data: new Date()
+      status: 'enviando',
+      data: new Date(),
+      empresaId: req.user.empresaId
     });
     await nova.save();
 
-    // Simula confirmação depois de 2s (trocar status para 'enviado')
     setTimeout(async () => {
       nova.status = 'enviado';
       await nova.save();

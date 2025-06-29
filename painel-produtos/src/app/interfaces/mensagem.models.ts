@@ -6,4 +6,5 @@ export interface Mensagem {
   bot: boolean;
   data: string;
   status: StatusMensagem;
+  empresaId?: string;
 }

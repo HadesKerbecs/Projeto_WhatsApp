@@ -12,12 +12,17 @@
       <input matInput [(ngModel)]="password" type="password" required />
     </mat-form-field>
 
-      <button mat-raised-button color="primary" class="full-width" (click)="registrar()"
-        [disabled]="!username || !password">
-        Registrar
-      </button>
-      <button mat-raised-button color="warn" type="button" (click)="cancelar()">
-        Cancelar
-      </button>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>ID da Empresa</mat-label>
+      <input matInput [(ngModel)]="empresaId" required />
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" class="full-width" (click)="registrar()"
+      [disabled]="!username || !password">
+      Registrar
+    </button>
+    <button mat-raised-button color="warn" type="button" (click)="cancelar()">
+      Cancelar
+    </button>
   </div>
 </div>

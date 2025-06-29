@@ -4,7 +4,7 @@ const Product = require('../models/product');
 
 exports.listar = async (req, res) => {
   try {
-    const produtos = await Product.find();
+    const produtos = await Product.find({ empresaId: req.user.empresaId });
     res.json(produtos);
   } catch (error) {
     res.status(500).json({ message: 'Erro ao listar produtos', error });
@@ -13,7 +13,7 @@ exports.listar = async (req, res) => {
 
 exports.buscarPorId = async (req, res) => {
   try {
-    const produto = await Product.findById(req.params.id);
+    const produto = await Product.findOne({ _id: req.params.id, empresaId: req.user.empresaId });
     if (!produto) return res.status(404).json({ message: 'Produto não encontrado' });
     res.json(produto);
   } catch (error) {
@@ -23,7 +23,7 @@ exports.buscarPorId = async (req, res) => {
 
 exports.criar = async (req, res) => {
   try {
-    const novoProduto = new Product(req.body);
+    const novoProduto = new Product({ ...req.body, empresaId: req.user.empresaId });
     const salvo = await novoProduto.save();
     res.status(201).json(salvo);
   } catch (error) {
@@ -33,7 +33,7 @@ exports.criar = async (req, res) => {
 
 exports.atualizar = async (req, res) => {
   try {
-    const atualizado = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const atualizado = await Product.findOneAndUpdate({ _id: req.params.id, empresaId: req.user.empresaId }, req.body, { new: true });
     if (!atualizado) return res.status(404).json({ message: 'Produto não encontrado' });
     res.json(atualizado);
   } catch (error) {
@@ -43,7 +43,7 @@ exports.atualizar = async (req, res) => {
 
 exports.remover = async (req, res) => {
   try {
-    const removido = await Product.findByIdAndDelete(req.params.id);
+    const removido = await Product.findOneAndDelete({ _id: req.params.id, empresaId: req.user.empresaId });
     if (!removido) return res.status(404).json({ message: 'Produto não encontrado' });
     res.json({ message: 'Produto removido com sucesso' });
   } catch (error) {
