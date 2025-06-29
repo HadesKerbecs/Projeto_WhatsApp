@@ -1,4 +1,4 @@
-import './scripts/agendaLimpeza';  // Ajuste o caminho conforme seu projeto
+require('./scripts/agendaLimpeza');
 
 // index.js - backend principal
 require('dotenv').config(); // Carrega as variáveis do .env
