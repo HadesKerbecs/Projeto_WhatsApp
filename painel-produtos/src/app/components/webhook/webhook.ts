@@ -47,23 +47,23 @@ export class Webhook implements OnInit {
     this.clienteSelecionado = cliente;
   }
 
-enviarMensagemManual() {
-  if (!this.novaMensagem.trim() || !this.clienteSelecionado) return;
+  enviarMensagemManual() {
+    if (!this.novaMensagem.trim() || !this.clienteSelecionado) return;
 
-  const nova: Mensagem = {
-    cliente: this.clienteSelecionado,
-    mensagem: this.novaMensagem,
-    bot: false,
-    data: new Date().toISOString(),
-    status: 'enviando'
-  };
+    const nova: Mensagem = {
+      cliente: this.clienteSelecionado,
+      mensagem: this.novaMensagem,
+      bot: false,
+      data: new Date().toISOString(),
+      status: 'enviando'
+    };
 
-  // Otimista: mostra imediatamente
-  this.mensagens.push(nova);
-  this.novaMensagem = '';
+    // Exibe a mensagem otimista imediatamente
+    this.mensagens.push(nova);
+    this.novaMensagem = '';
 
-  this.http.post(`${BACKEND_BASE_URL}/mensagens/enviar`, nova).subscribe(() => {
-    this.carregarMensagens();  // atualiza com status correto
-  });
-}
+    this.http.post(`${BACKEND_BASE_URL}/mensagens/enviar`, nova).subscribe(() => {
+      this.carregarMensagens();  // atualiza mensagens e status reais
+    });
+  }
 }
