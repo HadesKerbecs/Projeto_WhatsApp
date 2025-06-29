@@ -1,5 +1,6 @@
-// index.js - backend principal
+import './scripts/agendaLimpeza';  // Ajuste o caminho conforme seu projeto
 
+// index.js - backend principal
 require('dotenv').config(); // Carrega as variáveis do .env
 
 const express = require('express');
@@ -47,3 +48,14 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
+
+const path = require('path');
+
+// Serve arquivos estáticos do Angular
+app.use(express.static(path.join(__dirname, '../painel-produtos/dist/painel-produtos')));
+
+// Fallback: qualquer rota que não for encontrada, redireciona pro index.html do Angular
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../painel-produtos/dist/painel-produtos/index.html'));
+});
+

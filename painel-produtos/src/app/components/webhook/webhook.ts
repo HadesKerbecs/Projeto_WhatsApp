@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Mensagem } from '../../interfaces/mensagem.models';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -15,7 +15,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
   templateUrl: './webhook.html',
   styleUrls: ['./webhook.scss']
 })
-export class Webhook implements OnInit, OnDestroy {
+export class Webhook implements OnInit {
   mensagens: Mensagem[] = [];
   filtro: string = '';
   novaMensagem: string = '';
@@ -30,10 +30,6 @@ export class Webhook implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.carregarMensagens();
-  }
-
-  ngOnDestroy() {
-    console.log('💥 Webhook destruído');
   }
 
   carregarMensagens(): void {
@@ -124,10 +120,7 @@ export class Webhook implements OnInit, OnDestroy {
   }
 
   voltar() {
-    console.log('🔙 Botão de voltar clicado (forçado)');
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate(['/produtos']);
-    });
+    console.log('🔙 Botão de voltar clicado');
+    this.router.navigate(['/produtos']);
   }
-
 }
