@@ -4,14 +4,14 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BACKEND_BASE_URL } from '../../services/api';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-webhook',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, MatIconModule],
+  imports: [CommonModule, FormsModule, RouterModule, MatIconModule, BrowserAnimationsModule],
   templateUrl: './webhook.html',
   styleUrls: ['./webhook.scss']
 })
@@ -21,7 +21,7 @@ export class Webhook implements OnInit {
   novaMensagem: string = '';
   clienteSelecionado: string | null = null;
 
-  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) {}
+  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.carregarMensagens();
@@ -47,15 +47,23 @@ export class Webhook implements OnInit {
     this.clienteSelecionado = cliente;
   }
 
-  enviarMensagemManual() {
-    if (!this.novaMensagem.trim() || !this.clienteSelecionado) return;
+enviarMensagemManual() {
+  if (!this.novaMensagem.trim() || !this.clienteSelecionado) return;
 
-    this.http.post(`${BACKEND_BASE_URL}/mensagens/enviar`, {
-      cliente: this.clienteSelecionado,
-      mensagem: this.novaMensagem
-    }).subscribe(() => {
-      this.novaMensagem = '';
-      this.carregarMensagens();
-    });
-  }
+  const nova: Mensagem = {
+    cliente: this.clienteSelecionado,
+    mensagem: this.novaMensagem,
+    bot: false,
+    data: new Date().toISOString(),
+    status: 'enviando'
+  };
+
+  // Otimista: mostra imediatamente
+  this.mensagens.push(nova);
+  this.novaMensagem = '';
+
+  this.http.post(`${BACKEND_BASE_URL}/mensagens/enviar`, nova).subscribe(() => {
+    this.carregarMensagens();  // atualiza com status correto
+  });
+}
 }

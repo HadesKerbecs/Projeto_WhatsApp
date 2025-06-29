@@ -16,13 +16,24 @@ exports.enviarMensagem = async (req, res) => {
   try {
     const { cliente, mensagem } = req.body;
 
-    // Aqui você pode chamar a API da Meta para enviar pelo WhatsApp se quiser
-
-    const nova = new Mensagem({ cliente, mensagem, bot: false });
+    const nova = new Mensagem({ 
+      cliente, 
+      mensagem, 
+      bot: false,
+      status: 'enviando',  // status inicial
+      data: new Date()
+    });
     await nova.save();
+
+    // Simula confirmação depois de 2s (trocar status para 'enviado')
+    setTimeout(async () => {
+      nova.status = 'enviado';
+      await nova.save();
+    }, 2000);
 
     res.status(201).json(nova);
   } catch (err) {
     res.status(500).json({ message: 'Erro ao enviar mensagem' });
   }
 };
+

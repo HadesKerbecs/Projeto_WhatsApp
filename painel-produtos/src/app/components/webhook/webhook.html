@@ -1,35 +1,43 @@
 <div class="container">
-  <div class="sidebar">
-    <button class="voltar" routerLink="/produtos">← Voltar</button>
+    <div class="sidebar">
+        <button class="voltar" routerLink="/produtos">← Voltar</button>
 
-    <h3>Conversas</h3>
+        <h3>Conversas</h3>
 
-    <div class="input-icone">
-      <input [(ngModel)]="filtro" placeholder="Filtrar clientes..." />
-      <mat-icon class="icone">search</mat-icon>
+        <div class="input-icone">
+            <input [(ngModel)]="filtro" placeholder="Filtrar clientes..." />
+            <mat-icon class="icone">search</mat-icon>
+        </div>
+
+        <ul>
+            <li *ngFor="let cliente of clientesUnicos" (click)="selecionarCliente(cliente)"
+                [class.selected]="cliente === clienteSelecionado">
+                {{ cliente }}
+            </li>
+        </ul>
     </div>
 
-    <ul>
-      <li *ngFor="let cliente of clientesUnicos" 
-          (click)="selecionarCliente(cliente)"
-          [class.selected]="cliente === clienteSelecionado">
-        {{ cliente }}
-      </li>
-    </ul>
-  </div>
+    <div class="chat" *ngIf="clienteSelecionado">
+        <h3>Chat com {{ clienteSelecionado }}</h3>
+        <div class="mensagens">
+            <div *ngFor="let m of mensagensFiltradas" [ngClass]="{ 'bot': m.bot, 'user': !m.bot }" class="mensagem-item">
+                <span>{{ m.mensagem }}</span>
 
-  <div class="chat" *ngIf="clienteSelecionado">
-    <h3>Chat com {{ clienteSelecionado }}</h3>
-    <div class="mensagens">
-      <div *ngFor="let m of mensagensFiltradas" [ngClass]="{ 'bot': m.bot, 'user': !m.bot }" 
-           [class.bot]="m.bot">
-        <span>{{ m.mensagem }}</span>
-      </div>
-    </div>
+                <span class="hora">{{ m.data | date: 'HH:mm' }}</span>
 
-    <div class="resposta">
-      <input [(ngModel)]="novaMensagem" placeholder="Digite uma resposta..." />
-      <button (click)="enviarMensagemManual()">Enviar</button>
+                <span class="status" [ngSwitch]="m.status">
+                    <mat-icon *ngSwitchCase="'enviando'" class="spinner-icon">autorenew</mat-icon>
+                    <mat-icon *ngSwitchCase="'enviado'">check</mat-icon>
+                    <mat-icon *ngSwitchCase="'entregue'">done_all</mat-icon>
+                    <mat-icon *ngSwitchCase="'lida'" class="read-icon">done_all</mat-icon>
+                    <span *ngSwitchDefault>?</span>
+                </span>
+            </div>
+        </div>
+
+        <div class="resposta">
+            <input [(ngModel)]="novaMensagem" placeholder="Digite uma resposta..." />
+            <button (click)="enviarMensagemManual()">Enviar</button>
+        </div>
     </div>
-  </div>
 </div>

@@ -1,7 +1,9 @@
+export type StatusMensagem = 'enviando' | 'enviado' | 'entregue' | 'lida';
+
 export interface Mensagem {
-    _id?: string,
-    cliente: string;
-    mensagem: string;
-    bot: boolean;
-    data: string;
+  cliente: string;
+  mensagem: string;
+  bot: boolean;
+  data: string;
+  status: StatusMensagem;
 }

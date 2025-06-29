@@ -2,21 +2,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; // Centraliza verticalmente apenas no login
-  background-image: url('../../../../public/assets/Fundodelogin.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  filter: grayscale(70%) brightness(0.9);
-  position: relative;
-}
-
-.login-wrapper::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.4); // camada esbranquiçada translúcida
-  z-index: 1;
+  min-height: 100vh;
+  background: #f5f7fa;
 }
 
 .login-container {
@@ -31,7 +18,6 @@
   align-items: center;
   gap: 1.8rem;
   box-sizing: border-box;
-  z-index: 2;
 }
 
 .login-container h2 {

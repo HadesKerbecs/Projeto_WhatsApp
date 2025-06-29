@@ -95,6 +95,40 @@
         flex-direction: column;
         gap: 0.5rem;
 
+        .mensagem-item {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            word-wrap: break-word;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 0.5rem;
+
+            &.bot {
+                align-self: flex-start;
+                background-color: #e0e0e0;
+            }
+
+            &.user {
+                align-self: flex-end;
+                background-color: #c8e6c9;
+            }
+
+            .texto {
+                flex: 1;
+            }
+
+            .hora {
+                font-size: 0.75rem;
+                color: #666;
+                white-space: nowrap;
+            }
+        }
+
         div {
             max-width: 70%;
             padding: 0.75rem 1rem;
@@ -102,16 +136,45 @@
             font-size: 0.95rem;
             line-height: 1.4;
             word-wrap: break-word;
-        }
+            position: relative;
 
-        .bot {
-            align-self: flex-start;
-            background-color: #e0e0e0;
-        }
+            &.bot {
+                align-self: flex-start;
+                background-color: #e0e0e0;
+            }
 
-        .user {
-            align-self: flex-end;
-            background-color: #c8e6c9;
+            &.user {
+                align-self: flex-end;
+                background-color: #c8e6c9;
+            }
+
+            .hora {
+                position: absolute;
+                bottom: 5px;
+                right: 30px;
+                font-size: 0.75rem;
+                color: #999;
+            }
+
+            .status {
+                position: absolute;
+                bottom: 5px;
+                right: 5px;
+                font-size: 1rem;
+                color: #666;
+                display: flex;
+                align-items: center;
+                gap: 0.3rem;
+            }
+
+            .spinner-icon {
+                animation: spin 1s linear infinite;
+                color: #1976d2;
+            }
+
+            .read-icon {
+                color: #4caf50;
+            }
         }
     }
 
@@ -163,5 +226,16 @@
         flex: none;
         height: calc(100vh - 250px);
         padding: 0.5rem 1rem 1rem 1rem;
+    }
+}
+
+/* Animação spinner */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
     }
 }
