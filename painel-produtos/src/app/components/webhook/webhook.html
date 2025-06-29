@@ -20,7 +20,7 @@
     <div class="chat" *ngIf="clienteSelecionado">
         <h3>Chat com {{ clienteSelecionado }}</h3>
         <div class="mensagens">
-            <div *ngFor="let m of mensagensFiltradas" [ngClass]="{ 'bot': m.bot, 'user': !m.bot }"
+            <div *ngFor="let m of mensagens" [ngClass]="{ 'bot': m.bot, 'user': !m.bot }"
                 class="mensagem-item">
                 <div class="texto">{{ m.mensagem }}</div>
                 <div class="hora">{{ m.data | date:'HH:mm' }}</div>

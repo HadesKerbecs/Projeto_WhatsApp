@@ -28,8 +28,10 @@ export class Webhook implements OnInit {
   }
 
   carregarMensagens(): void {
+    if (!this.clienteSelecionado) return;
+
     this.http.get<Mensagem[]>(`${BACKEND_BASE_URL}/mensagens`).subscribe((dados) => {
-      this.mensagens = dados;
+      this.mensagens = dados.filter(m => m.cliente === this.clienteSelecionado);
       this.cdr.detectChanges();
     });
   }
@@ -46,6 +48,7 @@ export class Webhook implements OnInit {
 
   selecionarCliente(cliente: string) {
     this.clienteSelecionado = cliente;
+    this.carregarMensagens();
   }
 
   enviarMensagemManual() {
