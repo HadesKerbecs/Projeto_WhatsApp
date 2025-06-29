@@ -121,13 +121,6 @@ export class Webhook implements OnInit {
   }
 
   voltar() {
-    this.router.navigate(['/produtos']).then(() => {
-      const currentUrl = this.router.url;
-      if (currentUrl === '/produtos') {
-        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-          this.router.navigate(['/produtos']);
-        });
-      }
-    });
+    window.location.href = '/produtos';
   }
 }
