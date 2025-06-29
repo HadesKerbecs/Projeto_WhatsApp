@@ -66,7 +66,16 @@ export class Webhook implements OnInit {
 
   get clientesUnicos(): string[] {
     const nomes = new Set(this.mensagens.map(m => m.cliente));
-    return Array.from(nomes);
+    const clientes = Array.from(nomes);
+    
+    if (this.filtro.trim()) {
+      const termo = this.filtro.toLowerCase();
+      return clientes.filter(cliente => 
+        cliente.toLowerCase().includes(termo)
+      );
+    }
+    
+    return clientes;
   }
 
   get mensagensFiltradas(): Mensagem[] {

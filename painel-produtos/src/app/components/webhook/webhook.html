@@ -1,11 +1,11 @@
 <div class="container">
-  <div class="sidebar">
+    <div class="sidebar">
     <button class="voltar" (click)="voltar()">← Voltar</button>
 
     <h3>Conversas</h3>
 
     <div class="input-icone">
-      <input [(ngModel)]="filtro" placeholder="Filtrar clientes..." />
+      <input [(ngModel)]="filtro" (input)="cdr.detectChanges()" placeholder="Filtrar clientes..." />
       <mat-icon class="icone">search</mat-icon>
     </div>
 
