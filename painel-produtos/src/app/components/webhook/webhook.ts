@@ -121,6 +121,6 @@ export class Webhook implements OnInit {
   }
 
   voltar() {
-    window.location.href = '/produtos';
+      this.router.navigate(['/produtos']);
   }
 }

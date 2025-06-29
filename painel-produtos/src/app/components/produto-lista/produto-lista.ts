@@ -46,7 +46,7 @@ export class ProdutoLista implements OnInit {
     private cdr: ChangeDetectorRef
   ) {
     this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd && event.url === '/produtos') {
+      if (event instanceof NavigationEnd && event.urlAfterRedirects.includes('/produtos')) {
         this.carregarProdutos();
       }
     });
