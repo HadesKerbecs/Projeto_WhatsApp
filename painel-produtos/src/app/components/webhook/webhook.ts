@@ -40,6 +40,7 @@ export class Webhook implements OnInit {
   }
 
   get mensagensFiltradas(): Mensagem[] {
+    if (!this.clienteSelecionado) return [];
     return this.mensagens.filter(m => m.cliente === this.clienteSelecionado);
   }
 
@@ -58,12 +59,12 @@ export class Webhook implements OnInit {
       status: 'enviando'
     };
 
-    // Exibe a mensagem otimista imediatamente
-    this.mensagens.push(nova);
     this.novaMensagem = '';
 
+    // Não adiciona localmente para evitar duplicação
     this.http.post(`${BACKEND_BASE_URL}/mensagens/enviar`, nova).subscribe(() => {
-      this.carregarMensagens();  // atualiza mensagens e status reais
+      this.carregarMensagens();  // Atualiza mensagens do backend (substitui a lista)
     });
   }
+
 }

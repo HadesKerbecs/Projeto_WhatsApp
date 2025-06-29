@@ -27,25 +27,29 @@
     }
   }
 
-  // Estilo do filtro (mat-form-field)
   .full-width {
     width: 100%;
-  }
+    position: relative;
 
-  .icone {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #999;
-    pointer-events: none;
-    font-size: 20px;
+    .icone {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+      pointer-events: none;
+      font-size: 20px;
+      z-index: 2;
+    }
+
+    input {
+      padding-left: 2.5rem !important; // espaço para o ícone
+    }
   }
 
   .campo {
     margin-bottom: 1.5rem;
 
-    // Para garantir que o input fique com altura e padding corretos
     mat-form-field {
       width: 100%;
 
@@ -73,7 +77,6 @@
       margin-top: 1rem;
     }
   }
-
 
   @media (max-width: 600px) {
     .header {
