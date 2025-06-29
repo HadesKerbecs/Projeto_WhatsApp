@@ -16,6 +16,7 @@ import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-produto-lista',
+  standalone: true,
   imports: [
     CommonModule,
     MatDialogModule,
