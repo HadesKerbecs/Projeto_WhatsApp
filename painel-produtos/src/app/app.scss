@@ -2,7 +2,10 @@
 .router-container {
   min-height: 100vh;
   background: url('../../public/assets/papelDeParede.svg') no-repeat center center;
-  background-size: contain;
+  background-size: cover; // Faz a imagem preencher toda a tela
+  background-attachment: fixed; // (opcional) faz a imagem "colar" no fundo ao rolar
+  background-repeat: no-repeat;
+  background-position: center;
   font-family: 'Inter', 'Segoe UI', sans-serif;
   color: #1e1e2f;
   padding: 2rem;
