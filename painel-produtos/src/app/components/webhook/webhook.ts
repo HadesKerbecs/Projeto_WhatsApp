@@ -3,7 +3,7 @@ import { Mensagem } from '../../interfaces/mensagem.models';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BACKEND_BASE_URL } from '../../services/api';
 import { MatIconModule } from '@angular/material/icon';
@@ -21,17 +21,19 @@ export class Webhook implements OnInit {
   novaMensagem: string = '';
   clienteSelecionado: string | null = null;
 
-  constructor(private http: HttpClient, private cdr: ChangeDetectorRef) { }
+  constructor(
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.carregarMensagens();
   }
 
   carregarMensagens(): void {
-    if (!this.clienteSelecionado) return;
-
     this.http.get<Mensagem[]>(`${BACKEND_BASE_URL}/mensagens`).subscribe((dados) => {
-      this.mensagens = dados.filter(m => m.cliente === this.clienteSelecionado);
+      this.mensagens = dados;
       this.cdr.detectChanges();
     });
   }
@@ -48,7 +50,6 @@ export class Webhook implements OnInit {
 
   selecionarCliente(cliente: string) {
     this.clienteSelecionado = cliente;
-    this.carregarMensagens();
   }
 
   enviarMensagemManual() {
@@ -64,10 +65,12 @@ export class Webhook implements OnInit {
 
     this.novaMensagem = '';
 
-    // Não adiciona localmente para evitar duplicação
     this.http.post(`${BACKEND_BASE_URL}/mensagens/enviar`, nova).subscribe(() => {
-      this.carregarMensagens();  // Atualiza mensagens do backend (substitui a lista)
+      this.carregarMensagens();
     });
   }
 
+  voltar() {
+    this.router.navigate(['/produtos']);
+  }
 }
