@@ -21,7 +21,7 @@ export class Webhook implements OnInit {
   filtro: string = '';
   novaMensagem: string = '';
   clienteSelecionado: string | null = null;
-  private mensagensCarregadas: boolean = false;
+  private carregandoMensagens: boolean = false;
 
   constructor(
     private http: HttpClient,
@@ -34,15 +34,34 @@ export class Webhook implements OnInit {
   }
 
   carregarMensagens(): void {
-    if (this.mensagensCarregadas) return;
+    if (this.carregandoMensagens) return;
     
+    this.carregandoMensagens = true;
     this.http.get<Mensagem[]>(`${BACKEND_BASE_URL}/mensagens`)
       .pipe(distinctUntilChanged())
-      .subscribe((dados) => {
-        this.mensagens = dados;
-        this.mensagensCarregadas = true;
-        this.cdr.detectChanges();
+      .subscribe({
+        next: (dados) => {
+          this.mensagens = this.removerDuplicatas(dados);
+          this.carregandoMensagens = false;
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.carregandoMensagens = false;
+        }
       });
+  }
+
+  private removerDuplicatas(mensagens: Mensagem[]): Mensagem[] {
+    const unicas = new Map<string, Mensagem>();
+    mensagens.forEach(msg => {
+      const chave = `${msg.cliente}-${msg.mensagem}-${msg.data}`;
+      unicas.set(chave, msg);
+    });
+    return Array.from(unicas.values());
+  }
+
+  trackByMensagem(index: number, mensagem: Mensagem): string {
+    return `${mensagem.cliente}-${mensagem.mensagem}-${mensagem.data}`;
   }
 
   get clientesUnicos(): string[] {
@@ -77,9 +96,13 @@ export class Webhook implements OnInit {
 
     this.novaMensagem = '';
 
-    this.http.post(`${BACKEND_BASE_URL}/mensagens/enviar`, nova).subscribe(() => {
-      this.mensagensCarregadas = false;
-      this.carregarMensagens();
+    this.http.post(`${BACKEND_BASE_URL}/mensagens/enviar`, nova).subscribe({
+      next: () => {
+        this.carregarMensagens();
+      },
+      error: (err) => {
+        console.error('Erro ao enviar mensagem:', err);
+      }
     });
   }
 
