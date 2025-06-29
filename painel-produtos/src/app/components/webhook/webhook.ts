@@ -120,7 +120,14 @@ export class Webhook implements OnInit {
     });
   }
 
-  voltar() {
-      this.router.navigate(['/produtos']);
-  }
+voltar() {
+  console.log('🔙 Botão de voltar clicado');
+
+  this.router.navigate(['/produtos']).then((navegou) => {
+    console.log('✅ Navegação executada?', navegou);
+    console.log('📍 Rota atual:', this.router.url);
+  }).catch(erro => {
+    console.error('❌ Erro ao navegar:', erro);
+  });
+}
 }

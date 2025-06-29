@@ -44,7 +44,13 @@ export class ProdutoLista implements OnInit {
     private snackBar: MatSnackBar,
     private authService: AuthService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd && event.urlAfterRedirects.includes('/produtos')) {
+        this.carregarProdutos();
+      }
+    });
+  }
 
   ngOnInit(): void {
     console.log('ProdutoLista carregado');
