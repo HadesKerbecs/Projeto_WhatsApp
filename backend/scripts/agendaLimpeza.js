@@ -1,7 +1,7 @@
-import cron from 'node-cron';
-import * as dotenv from 'dotenv'
-import { MongoClient } from 'mongodb';
-dotenv.config();
+const cron = require('node-cron');
+const { MongoClient } = require('mongodb');
+require('dotenv').config();
+
 
 const MONGO_URI = process.env.MONGO_URI;
 const DB_NAME = 'sample_mflix';
