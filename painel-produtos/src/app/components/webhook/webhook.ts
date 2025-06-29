@@ -7,6 +7,7 @@ import { Router, RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BACKEND_BASE_URL } from '../../services/api';
 import { MatIconModule } from '@angular/material/icon';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-webhook',
@@ -20,6 +21,7 @@ export class Webhook implements OnInit {
   filtro: string = '';
   novaMensagem: string = '';
   clienteSelecionado: string | null = null;
+  private mensagensCarregadas: boolean = false;
 
   constructor(
     private http: HttpClient,
@@ -32,10 +34,15 @@ export class Webhook implements OnInit {
   }
 
   carregarMensagens(): void {
-    this.http.get<Mensagem[]>(`${BACKEND_BASE_URL}/mensagens`).subscribe((dados) => {
-      this.mensagens = dados;
-      this.cdr.detectChanges();
-    });
+    if (this.mensagensCarregadas) return;
+    
+    this.http.get<Mensagem[]>(`${BACKEND_BASE_URL}/mensagens`)
+      .pipe(distinctUntilChanged())
+      .subscribe((dados) => {
+        this.mensagens = dados;
+        this.mensagensCarregadas = true;
+        this.cdr.detectChanges();
+      });
   }
 
   get clientesUnicos(): string[] {
@@ -45,11 +52,16 @@ export class Webhook implements OnInit {
 
   get mensagensFiltradas(): Mensagem[] {
     if (!this.clienteSelecionado) return [];
-    return this.mensagens.filter(m => m.cliente === this.clienteSelecionado);
+    return this.mensagens
+      .filter(m => m.cliente === this.clienteSelecionado)
+      .sort((a, b) => new Date(a.data).getTime() - new Date(b.data).getTime());
   }
 
   selecionarCliente(cliente: string) {
-    this.clienteSelecionado = cliente;
+    if (this.clienteSelecionado !== cliente) {
+      this.clienteSelecionado = cliente;
+      this.cdr.detectChanges();
+    }
   }
 
   enviarMensagemManual() {
@@ -66,6 +78,7 @@ export class Webhook implements OnInit {
     this.novaMensagem = '';
 
     this.http.post(`${BACKEND_BASE_URL}/mensagens/enviar`, nova).subscribe(() => {
+      this.mensagensCarregadas = false;
       this.carregarMensagens();
     });
   }

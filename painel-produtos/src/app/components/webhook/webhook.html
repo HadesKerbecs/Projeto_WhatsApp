@@ -20,23 +20,26 @@
   <div class="chat" *ngIf="clienteSelecionado">
     <h3>Chat com {{ clienteSelecionado }}</h3>
     <div class="mensagens">
-      <div *ngFor="let m of mensagensFiltradas" [ngClass]="{ 'bot': m.bot, 'user': !m.bot }" class="mensagem-item">
-        <div class="texto">
-          <strong>{{ m.bot ? 'BOT:' : clienteSelecionado + ':' }}</strong> {{ m.mensagem }}
+      <ng-container *ngIf="mensagensFiltradas.length > 0">
+        <div *ngFor="let m of mensagensFiltradas; trackBy: trackByMensagem" 
+             [ngClass]="{ 'bot': m.bot, 'user': !m.bot }" class="mensagem-item">
+          <div class="texto">
+            <strong>{{ m.bot ? 'BOT:' : clienteSelecionado + ':' }}</strong> {{ m.mensagem }}
+          </div>
+          <div class="hora">{{ m.data | date:'HH:mm' }}</div>
+          <div class="status" [ngSwitch]="m.status">
+            <mat-icon *ngSwitchCase="'enviando'" class="spinner-icon">autorenew</mat-icon>
+            <mat-icon *ngSwitchCase="'enviado'">check</mat-icon>
+            <mat-icon *ngSwitchCase="'entregue'">done_all</mat-icon>
+            <mat-icon *ngSwitchCase="'lida'" class="read-icon">done_all</mat-icon>
+            <span *ngSwitchDefault>?</span>
+          </div>
         </div>
-        <div class="hora">{{ m.data | date:'HH:mm' }}</div>
-        <div class="status" [ngSwitch]="m.status">
-          <mat-icon *ngSwitchCase="'enviando'" class="spinner-icon">autorenew</mat-icon>
-          <mat-icon *ngSwitchCase="'enviado'">check</mat-icon>
-          <mat-icon *ngSwitchCase="'entregue'">done_all</mat-icon>
-          <mat-icon *ngSwitchCase="'lida'" class="read-icon">done_all</mat-icon>
-          <span *ngSwitchDefault>?</span>
-        </div>
-      </div>
+      </ng-container>
     </div>
 
     <div class="resposta">
-      <input [(ngModel)]="novaMensagem" placeholder="Digite uma resposta..." />
+      <input [(ngModel)]="novaMensagem" placeholder="Digite uma resposta..." (keyup.enter)="enviarMensagemManual()" />
       <button (click)="enviarMensagemManual()">Enviar</button>
     </div>
   </div>
