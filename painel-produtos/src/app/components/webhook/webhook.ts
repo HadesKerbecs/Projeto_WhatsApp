@@ -4,7 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BACKEND_BASE_URL } from '../../services/api';
 import { MatIconModule } from '@angular/material/icon';
 import { distinctUntilChanged } from 'rxjs/operators';
@@ -12,7 +11,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
 @Component({
   selector: 'app-webhook',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, MatIconModule, BrowserAnimationsModule],
+  imports: [CommonModule, FormsModule, RouterModule, MatIconModule],
   templateUrl: './webhook.html',
   styleUrls: ['./webhook.scss']
 })
