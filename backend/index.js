@@ -16,6 +16,7 @@ const mongoUri = process.env.MONGO_URI;
 // Middlewares
 app.use(cors());
 app.use(express.json()); // Para receber JSON no body
+app.use(express.urlencoded({ extended: true })); // Para receber x-www-form-urlencoded do Twilio
 
 // Conexão com MongoDB
 mongoose.connect(mongoUri, {
