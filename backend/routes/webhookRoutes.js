@@ -1,15 +1,12 @@
-// routes/webhookRoutes.js
 const express = require('express');
 const router = express.Router();
 
 router.post('/mensagens', (req, res) => {
-  console.log('Webhook Twilio recebeu mensagem:', req.body);
+  console.log('=== Mensagem recebida no webhook ===');
+  console.log('Headers:', req.headers);
+  console.log('Body:', req.body);
 
-  const { Body, From } = req.body;
-
-  // Aqui você pode salvar no banco ou enviar para seu frontend via websocket
-
-  // Twilio espera uma resposta XML vazia para confirmar recebimento
+  // Retorna resposta esperada pelo Twilio
   res.status(200).send('<Response></Response>');
 });
 
