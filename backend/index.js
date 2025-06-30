@@ -34,6 +34,8 @@ const produtoRoutes = require('./routes/produtoRoutes');
 const authRoutes = require('./routes/authRoutes');
 const chatRoutes = require('./routes/chatRoutes');
 const mensagemRoutes = require('./routes/mensagemRoutes');
+const whatsappRoutes = require('./routes/whatsappRoutes');
+app.use('/whatsapp', whatsappRoutes);
 app.use('/api/mensagens', mensagemRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/produtos', produtoRoutes);

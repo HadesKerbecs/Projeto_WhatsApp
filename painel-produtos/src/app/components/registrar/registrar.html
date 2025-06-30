@@ -4,17 +4,20 @@
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Usuário</mat-label>
-      <input matInput [(ngModel)]="username" required />
+      <input matInput [(ngModel)]="username" required placeholder="Ex: joaosilva" matTooltip="Nome de usuário que você usará para login"/>
+      <mat-hint>Insira seu nome de usuário</mat-hint>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Senha</mat-label>
-      <input matInput [(ngModel)]="password" type="password" required />
+      <input matInput [(ngModel)]="password" type="password" required placeholder="Ex: P@ssword!" matTooltip="Use letra maiúscula, minúscula, número e caractere especial"/>
+      <mat-hint>Senha forte é obrigatória</mat-hint>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>ID da Empresa</mat-label>
-      <input matInput [(ngModel)]="empresaId" required />
+      <input matInput [(ngModel)]="empresaId" required placeholder="Ex: empresa-teste" matTooltip="ID usado para compartilhar dados entre usuários da mesma empresa"/>
+      <mat-hint>Use um identificador simples e consistente</mat-hint>
     </mat-form-field>
 
     <button mat-raised-button color="primary" class="full-width" (click)="registrar()"
