@@ -36,7 +36,12 @@ export class Webhook implements OnInit {
     if (this.carregandoMensagens) return;
 
     this.carregandoMensagens = true;
-    this.http.get<Mensagem[]>(`${BACKEND_BASE_URL}/mensagens`)
+    this.http.get<Mensagem[]>(`${BACKEND_BASE_URL}/mensagens`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('auth_token') || ''}`,
+      }
+    })
       .pipe(distinctUntilChanged())
       .subscribe({
         next: (dados) => {
@@ -92,7 +97,6 @@ export class Webhook implements OnInit {
   }
 
   atualizarFiltro() {
-    // Força a atualização da lista de clientes
     this.cdr.detectChanges();
   }
 
@@ -109,7 +113,12 @@ export class Webhook implements OnInit {
 
     this.novaMensagem = '';
 
-    this.http.post(`${BACKEND_BASE_URL}/mensagens/enviar`, nova).subscribe({
+    this.http.post(`${BACKEND_BASE_URL}/mensagens/enviar`, nova, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('auth_token') || ''}`,
+      }
+    }).subscribe({
       next: () => {
         this.carregarMensagens();
       },
