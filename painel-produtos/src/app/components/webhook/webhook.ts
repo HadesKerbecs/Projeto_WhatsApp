@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Mensagem } from '../../interfaces/mensagem.models';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -15,12 +15,13 @@ import { distinctUntilChanged } from 'rxjs/operators';
   templateUrl: './webhook.html',
   styleUrls: ['./webhook.scss']
 })
-export class Webhook implements OnInit {
+export class Webhook implements OnInit, OnDestroy {
   mensagens: Mensagem[] = [];
   filtro: string = '';
   novaMensagem: string = '';
   clienteSelecionado: string | null = null;
   private carregandoMensagens: boolean = false;
+  private intervaloMensagens?: ReturnType<typeof setInterval>;
 
   constructor(
     private http: HttpClient,
@@ -30,6 +31,16 @@ export class Webhook implements OnInit {
 
   ngOnInit(): void {
     this.carregarMensagens();
+
+    this.intervaloMensagens = setInterval(() => {
+      this.carregarMensagens();
+    }, 5000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.intervaloMensagens) {
+      clearInterval(this.intervaloMensagens);
+    }
   }
 
   carregarMensagens(): void {

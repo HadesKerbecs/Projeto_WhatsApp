@@ -1,5 +1,5 @@
 const Mensagem = require('../models/mensagem');
-const axios = require('axios');
+const { enviarMensagemWhatsApp } = require('../services/twilioWhatsapp');
 
 exports.listarMensagens = async (req, res) => {
   console.log('Listar mensagens chamada');
@@ -24,16 +24,23 @@ exports.enviarMensagem = async (req, res) => {
       data: new Date(),
       empresaId: req.user.empresaId
     });
+
     await nova.save();
 
-    setTimeout(async () => {
+    // ✅ Enviar mensagem para o WhatsApp do cliente
+    try {
+      await enviarMensagemWhatsApp(cliente, mensagem);
       nova.status = 'enviado';
-      await nova.save();
-    }, 2000);
+    } catch (twilioError) {
+      console.error('Erro ao enviar pelo Twilio:', twilioError.message);
+      nova.status = 'erro';
+    }
+
+    await nova.save();
 
     res.status(201).json(nova);
   } catch (err) {
+    console.error('Erro ao enviar mensagem manual:', err);
     res.status(500).json({ message: 'Erro ao enviar mensagem' });
   }
 };
-
