@@ -1,5 +1,5 @@
 const Mensagem = require('../models/mensagem');
-const { enviarMensagemWhatsApp } = require('../services/twilioWhatsapp');
+const { enviarMensagemWhatsApp } = require('../utils/twilioWhatsapp');
 
 exports.listarMensagens = async (req, res) => {
   console.log('Listar mensagens chamada');
@@ -19,24 +19,21 @@ exports.enviarMensagem = async (req, res) => {
     const nova = new Mensagem({ 
       cliente, 
       mensagem, 
-      bot: false,
+      bot: true, // importante deixar como "true" se for do sistema
       status: 'enviando',
       data: new Date(),
       empresaId: req.user.empresaId
     });
-
     await nova.save();
 
-    // ✅ Enviar mensagem para o WhatsApp do cliente
-    try {
-      await enviarMensagemWhatsApp(cliente, mensagem);
+    // 🟢 ENVIA MENSAGEM PARA O WHATSAPP REAL
+    await enviarMensagemWhatsApp(cliente, mensagem);
+
+    // Atualiza status como enviado (simulado após delay)
+    setTimeout(async () => {
       nova.status = 'enviado';
-    } catch (twilioError) {
-      console.error('Erro ao enviar pelo Twilio:', twilioError.message);
-      nova.status = 'erro';
-    }
-
-    await nova.save();
+      await nova.save();
+    }, 2000);
 
     res.status(201).json(nova);
   } catch (err) {

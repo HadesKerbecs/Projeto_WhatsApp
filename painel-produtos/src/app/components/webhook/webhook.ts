@@ -117,7 +117,7 @@ export class Webhook implements OnInit, OnDestroy {
     const nova: Mensagem = {
       cliente: this.clienteSelecionado,
       mensagem: this.novaMensagem,
-      bot: false,
+      bot: true,
       data: new Date().toISOString(),
       status: 'enviando'
     };
