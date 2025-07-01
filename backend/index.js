@@ -35,7 +35,7 @@ const chatRoutes = require('./routes/chatRoutes');
 const mensagemRoutes = require('./routes/mensagemRoutes');
 const whatsappRoutes = require('./routes/whatsappRoutes');
 const webhookRoutes = require('./routes/webhookRoutes');
-const clienteRoutes = require('./routes/clienteRoutes');
+const clienteRoutes = require('./routes/clientesRoutes');
 
 app.use('/api/clientes', clienteRoutes);
 app.use('/webhook', webhookRoutes);
