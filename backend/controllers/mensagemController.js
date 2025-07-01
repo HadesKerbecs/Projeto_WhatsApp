@@ -1,5 +1,5 @@
 const Mensagem = require('../models/mensagem');
-const { enviarMensagemWhatsApp } = require('../utils/twilioWhatsapp');
+const { enviarMensagemWhatsApp } = require('../services/twilioWhatsapp');
 
 exports.listarMensagens = async (req, res) => {
   console.log('Listar mensagens chamada');
