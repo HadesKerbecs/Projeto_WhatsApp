@@ -1,5 +1,6 @@
 const Mensagem = require('../models/mensagem');
 const axios = require('axios');
+const Product = require('../models/product');
 
 const CHATGPT_API_URL = 'https://api.openai.com/v1/chat/completions';
 const CHATGPT_TOKEN = process.env.CHATGPT_TOKEN;
