@@ -1,6 +1,7 @@
 const Mensagem = require('../models/mensagem');
 const axios = require('axios');
 const Product = require('../models/product');
+const Cliente = require('../models/cliente');
 
 const CHATGPT_API_URL = 'https://api.openai.com/v1/chat/completions';
 const CHATGPT_TOKEN = process.env.CHATGPT_TOKEN;
@@ -34,89 +35,76 @@ ${listaProdutos}
 }
 
 exports.receberMensagem = async (req, res) => {
-  console.log('=== Mensagem recebida no webhook ===');
-  console.log('Body:', req.body);
+  const mensagemCliente = req.body.Body || '';
+  const numeroCliente = req.body.WaId || 'desconhecido';
 
   try {
-    const mensagemCliente = req.body.Body || '';
-    const numeroCliente = req.body.WaId || 'desconhecido';
+    // 🔍 Buscar empresa do número que mandou mensagem
+    const clienteDB = await Cliente.findOne({ numero: numeroCliente });
 
-    // Salvar mensagem do cliente no banco
+    if (!clienteDB) {
+      console.warn('Número ainda não cadastrado:', numeroCliente);
+      return res.status(403).send('<Response>Cliente não reconhecido</Response>');
+    }
+
+    const empresaId = clienteDB.empresaId;
+
+    // 💾 Salvar mensagem recebida
     const novaMensagem = new Mensagem({
       cliente: numeroCliente,
       mensagem: mensagemCliente,
       bot: false,
       status: 'recebida',
       data: new Date(),
-      empresaId: 'empresa-teste', // vai ser dinâmico depois
+      empresaId,
     });
     await novaMensagem.save();
 
-    // Buscar últimos 5 diálogos anteriores com esse cliente
-    const historico = await Mensagem.find({ cliente: numeroCliente })
-      .sort({ data: -1 })
-      .limit(5)
-      .lean();
-
-    // Reverter para ordem cronológica
+    // 🔁 Buscar histórico do mesmo cliente
+    const historico = await Mensagem.find({ cliente: numeroCliente }).sort({ data: -1 }).limit(5).lean();
     const historicoOrdenado = historico.reverse();
 
-    // Buscar produtos da empresa
-    const produtos = await Product.find({ empresaId: 'empresa-teste' });
+    // 📦 Buscar produtos da empresa
+    const produtos = await Product.find({ empresaId });
 
-    const listaProdutos = produtos.map(p =>
-      `- Nome: ${p.nome}, Preço: R$${p.preco.toFixed(2)}, Descrição: ${p.descricao}`
-    ).join('\n');
-
+    // 🧠 Montar contexto
     const mensagensContexto = [
       {
         role: 'system',
         content: `
-Você é um assistente de vendas que responde usando apenas os produtos listados abaixo.
-Se o cliente perguntar sobre algo que não está na lista, diga que não temos esse item.
-Só forneça preço e descrição se o cliente pedir detalhes.
-
-Produtos disponíveis:
-${listaProdutos}
-        `.trim(),
+Você é um assistente de vendas que responde com base apenas nesses produtos:
+${produtos.map(p => `- ${p.nome}, R$${p.preco.toFixed(2)}, ${p.descricao}`).join('\n')}
+        `.trim()
       },
-      ...historicoOrdenado.map(msg => ({
-        role: msg.bot ? 'assistant' : 'user',
-        content: msg.mensagem,
+      ...historicoOrdenado.map(m => ({
+        role: m.bot ? 'assistant' : 'user',
+        content: m.mensagem,
       })),
-      {
-        role: 'user',
-        content: mensagemCliente,
-      },
+      { role: 'user', content: mensagemCliente }
     ];
 
-    // Enviar para o ChatGPT
-    const respostaGPT = await axios.post(
-      CHATGPT_API_URL,
-      {
-        model: 'gpt-3.5-turbo',
-        messages: mensagensContexto,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${CHATGPT_TOKEN}`,
-          'Content-Type': 'application/json',
-        },
+    // 🔁 Resposta do GPT
+    const respostaGPT = await axios.post(CHATGPT_API_URL, {
+      model: 'gpt-3.5-turbo',
+      messages: mensagensContexto,
+    }, {
+      headers: {
+        Authorization: `Bearer ${CHATGPT_TOKEN}`,
+        'Content-Type': 'application/json'
       }
-    );
+    });
 
     const resposta = respostaGPT.data.choices[0].message.content;
 
-    // Salvar resposta do bot
-    const mensagemBot = new Mensagem({
+    // 💾 Salvar resposta do bot
+    await new Mensagem({
       cliente: numeroCliente,
       mensagem: resposta,
       bot: true,
       status: 'enviado',
       data: new Date(),
-      empresaId: 'empresa-teste',
-    });
-    await mensagemBot.save();
+      empresaId
+    }).save();
 
     // Enviar via Twilio
     await axios.post(
@@ -138,9 +126,10 @@ ${listaProdutos}
     );
 
     return res.status(200).send('<Response></Response>');
+
   } catch (err) {
-    console.error('❌ Erro ao processar webhook:', err.response?.data || err.message);
-    return res.status(500).send('<Response></Response>');
+    console.error('Erro no webhook:', err);
+    return res.status(500).send('<Response>Erro interno</Response>');
   }
 };
 
