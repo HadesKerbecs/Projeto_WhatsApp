@@ -3,9 +3,12 @@ const axios = require('axios');
 
 const CHATGPT_API_URL = 'https://api.openai.com/v1/chat/completions';
 const CHATGPT_TOKEN = process.env.CHATGPT_TOKEN;
+const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID;
+const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN;
+const TWILIO_WHATSAPP_FROM = process.env.TWILIO_WHATSAPP_FROM;
 
-if (!CHATGPT_TOKEN) {
-  console.error('⚠️ Erro: variável de ambiente CHATGPT_TOKEN não definida!');
+if (!CHATGPT_TOKEN || !TWILIO_ACCOUNT_SID || !TWILIO_AUTH_TOKEN || !TWILIO_WHATSAPP_FROM) {
+  console.error('⚠️ Variáveis de ambiente faltando! Verifique CHATGPT_TOKEN, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_FROM.');
 }
 
 function montarPrompt(produtos, pergunta) {
@@ -30,27 +33,74 @@ ${listaProdutos}
 
 exports.receberMensagem = async (req, res) => {
   console.log('=== Mensagem recebida no webhook ===');
-  console.log('Headers:', req.headers);
   console.log('Body:', req.body);
 
   try {
+    const mensagemCliente = req.body.Body || '';
+    const numeroCliente = req.body.WaId || 'desconhecido';
+
+    // Salvar mensagem do cliente no banco
     const novaMensagem = new Mensagem({
-      cliente: req.body.WaId || 'desconhecido',
-      mensagem: req.body.Body || '',
+      cliente: numeroCliente,
+      mensagem: mensagemCliente,
       bot: false,
       status: 'recebida',
       data: new Date(),
-      empresaId: 'empresa-teste', // ajustar para dinamicamente
+      empresaId: 'empresa-teste', // colocar dinâmica depois
     });
-
     await novaMensagem.save();
 
-    // Aqui você pode implementar chamada para GPT, envio resposta etc, se quiser
+    // Buscar produtos cadastrados da empresa
+    const produtos = await Product.find({ empresaId: 'empresa-teste' });
 
-    res.status(200).send('<Response></Response>');
+    // Criar prompt e enviar pro ChatGPT
+    const messages = montarPrompt(produtos, mensagemCliente);
+    const respostaGPT = await axios.post(
+      CHATGPT_API_URL,
+      { model: 'gpt-3.5-turbo', messages },
+      {
+        headers: {
+          Authorization: `Bearer ${CHATGPT_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    const resposta = respostaGPT.data.choices[0].message.content;
+
+    // Salvar resposta no banco
+    const mensagemBot = new Mensagem({
+      cliente: numeroCliente,
+      mensagem: resposta,
+      bot: true,
+      status: 'enviado',
+      data: new Date(),
+      empresaId: 'empresa-teste',
+    });
+    await mensagemBot.save();
+
+    // Enviar resposta pro WhatsApp via Twilio
+    await axios.post(
+      `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`,
+      new URLSearchParams({
+        From: TWILIO_WHATSAPP_FROM,
+        To: `whatsapp:+${numeroCliente}`,
+        Body: resposta,
+      }),
+      {
+        auth: {
+          username: TWILIO_ACCOUNT_SID,
+          password: TWILIO_AUTH_TOKEN,
+        },
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      }
+    );
+
+    return res.status(200).send('<Response></Response>');
   } catch (err) {
-    console.error('Erro ao salvar mensagem do webhook:', err);
-    res.status(500).send('<Response></Response>');
+    console.error('❌ Erro ao processar webhook:', err.response?.data || err.message);
+    return res.status(500).send('<Response></Response>');
   }
 };
 
