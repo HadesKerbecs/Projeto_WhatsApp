@@ -19,7 +19,7 @@ exports.enviarMensagem = async (req, res) => {
     const nova = new Mensagem({ 
       cliente, 
       mensagem, 
-      bot: true, // importante deixar como "true" se for do sistema
+      bot: true,
       status: 'enviando',
       data: new Date(),
       empresaId: req.user.empresaId
