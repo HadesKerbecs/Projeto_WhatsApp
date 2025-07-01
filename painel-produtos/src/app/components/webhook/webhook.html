@@ -23,7 +23,8 @@
       <div *ngFor="let m of mensagensFiltradas; trackBy: trackByMensagem" 
            [ngClass]="{ 'bot': m.bot, 'user': !m.bot }" class="mensagem-item">
         <div class="texto">
-          <strong>{{ m.bot ? 'BOT:' : clienteSelecionado + ':' }}</strong> {{ m.mensagem }}
+          <strong>{{ m.bot ? 'BOT:' : clienteSelecionado + ':' }}</strong> 
+          <pre class="mensagem-formatada">{{m.mensagem }}</pre>
         </div>
         <div class="hora">{{ m.data | date:'HH:mm' }}</div>
         <div class="status" [ngSwitch]="m.status">

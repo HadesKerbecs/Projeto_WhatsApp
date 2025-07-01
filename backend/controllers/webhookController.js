@@ -21,6 +21,7 @@ function montarPrompt(produtos, pergunta) {
 Você é um assistente de vendas que só pode responder usando as informações dos produtos listados abaixo.
 Não invente produtos que não existem.
 Se o cliente perguntar sobre algo que não está na lista, diga que não temos esse produto.
+Só forneça preço e descrição se o usuário pedir detalhes de um produto específico.
 
 Produtos disponíveis:
 ${listaProdutos}
@@ -47,18 +48,55 @@ exports.receberMensagem = async (req, res) => {
       bot: false,
       status: 'recebida',
       data: new Date(),
-      empresaId: 'empresa-teste', // colocar dinâmica depois
+      empresaId: 'empresa-teste', // vai ser dinâmico depois
     });
     await novaMensagem.save();
 
-    // Buscar produtos cadastrados da empresa
+    // Buscar últimos 5 diálogos anteriores com esse cliente
+    const historico = await Mensagem.find({ cliente: numeroCliente })
+      .sort({ data: -1 })
+      .limit(5)
+      .lean();
+
+    // Reverter para ordem cronológica
+    const historicoOrdenado = historico.reverse();
+
+    // Buscar produtos da empresa
     const produtos = await Product.find({ empresaId: 'empresa-teste' });
 
-    // Criar prompt e enviar pro ChatGPT
-    const messages = montarPrompt(produtos, mensagemCliente);
+    const listaProdutos = produtos.map(p =>
+      `- Nome: ${p.nome}, Preço: R$${p.preco.toFixed(2)}, Descrição: ${p.descricao}`
+    ).join('\n');
+
+    const mensagensContexto = [
+      {
+        role: 'system',
+        content: `
+Você é um assistente de vendas que responde usando apenas os produtos listados abaixo.
+Se o cliente perguntar sobre algo que não está na lista, diga que não temos esse item.
+Só forneça preço e descrição se o cliente pedir detalhes.
+
+Produtos disponíveis:
+${listaProdutos}
+        `.trim(),
+      },
+      ...historicoOrdenado.map(msg => ({
+        role: msg.bot ? 'assistant' : 'user',
+        content: msg.mensagem,
+      })),
+      {
+        role: 'user',
+        content: mensagemCliente,
+      },
+    ];
+
+    // Enviar para o ChatGPT
     const respostaGPT = await axios.post(
       CHATGPT_API_URL,
-      { model: 'gpt-3.5-turbo', messages },
+      {
+        model: 'gpt-3.5-turbo',
+        messages: mensagensContexto,
+      },
       {
         headers: {
           Authorization: `Bearer ${CHATGPT_TOKEN}`,
@@ -66,9 +104,10 @@ exports.receberMensagem = async (req, res) => {
         },
       }
     );
+
     const resposta = respostaGPT.data.choices[0].message.content;
 
-    // Salvar resposta no banco
+    // Salvar resposta do bot
     const mensagemBot = new Mensagem({
       cliente: numeroCliente,
       mensagem: resposta,
@@ -79,7 +118,7 @@ exports.receberMensagem = async (req, res) => {
     });
     await mensagemBot.save();
 
-    // Enviar resposta pro WhatsApp via Twilio
+    // Enviar via Twilio
     await axios.post(
       `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`,
       new URLSearchParams({

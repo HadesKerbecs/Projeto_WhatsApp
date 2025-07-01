@@ -127,6 +127,12 @@
         flex: 1;
       }
 
+      .mensagem-formatada {
+        white-space: pre-wrap;
+        font-family: inherit;
+        margin-top: 0.25rem;
+      }
+
       .hora {
         font-size: 0.75rem;
         color: #666;
