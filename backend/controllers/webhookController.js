@@ -42,12 +42,7 @@ exports.receberMensagem = async (req, res) => {
     // 🔍 Buscar empresa do número que mandou mensagem
     const clienteDB = await Cliente.findOne({ numero: numeroCliente });
 
-    if (!clienteDB) {
-      console.warn('Número ainda não cadastrado:', numeroCliente);
-      return res.status(403).send('<Response>Cliente não reconhecido</Response>');
-    }
-
-    const empresaId = clienteDB.empresaId;
+    const empresaId = 'empresa-teste';
 
     // 💾 Salvar mensagem recebida
     const novaMensagem = new Mensagem({
