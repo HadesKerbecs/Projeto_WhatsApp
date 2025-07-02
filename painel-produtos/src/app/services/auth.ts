@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { tap, catchError, map } from 'rxjs/operators';
 import { User } from '../interfaces/usuario.model';
-import * as jwtDecode  from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 interface JWTPayload {
   exp: number;
@@ -52,19 +52,15 @@ export class AuthService {
   }
 
   isTokenExpired(token: string): boolean {
-    try {
-      // forçar o tipo da função, passando por unknown
-      const decodeFn = jwtDecode as unknown as (token: string) => JWTPayload;
-      const decoded = decodeFn(token);
-
-      if (!decoded.exp) return true;
-      const now = Math.floor(Date.now() / 1000);
-      return decoded.exp < now;
-    } catch {
-      return true;
-    }
+  try {
+    const decoded = jwtDecode<JWTPayload>(token);
+    if (!decoded.exp) return true;
+    const now = Math.floor(Date.now() / 1000);
+    return decoded.exp < now;
+  } catch {
+    return true;
   }
-
+}
   isLoggedIn(): boolean {
     if (typeof window === 'undefined') return false;
     const token = this.getToken();
