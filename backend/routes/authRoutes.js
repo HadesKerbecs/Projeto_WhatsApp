@@ -15,23 +15,24 @@ router.post('/register', async (req, res) => {
 
   const cleanEmpresaId = empresaId.trim().toLowerCase();
 
-  const senhaForte = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{8,}$/;
-  if(!senhaForte.test(password)) {
-    return res.status(400).json({
-      message: 'Senha fraca: use ao menos 8 caracteres com maiúscula, minúscula, número e símbolo.'
-    });
-  }
-
+  // Verifica se usuário já existe
   const exists = await User.findOne({ username });
   if (exists) return res.status(400).json({ message: 'Usuário já existe' });
 
+  // Verifica se empresaId foi cadastrada (pelo cliente/numero)
+  const empresaValida = await Cliente.findOne({ empresaId: cleanEmpresaId });
+  if (!empresaValida) {
+    return res.status(400).json({ message: 'empresaId não cadastrada. Registre um número antes.' });
+  }
+
+  // Continua criação do usuário...
   const hashed = await bcrypt.hash(password, 10);
   const novo = new User({ username, password: hashed, empresaId: cleanEmpresaId });
   await novo.save();
 
-  console.log(`✅ Novo usuário criado: ${username} (empresa: ${cleanEmpresaId})`);
-  res.status(201).json({ message: 'Usuário criado' });
+  return res.status(201).json({ message: 'Usuário criado' });
 });
+
 
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;

@@ -10,21 +10,24 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-registrar',
-  imports: [CommonModule,
+  standalone: true,
+  imports: [
+    CommonModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     FormsModule,
-    MatTooltipModule],
-  templateUrl: './registrar.html',
-  styleUrl: './registrar.scss'
+    MatTooltipModule,
+  ],
+  templateUrl: './registrar.component.html',
+  styleUrls: ['./registrar.component.scss'],
 })
-export class Registrar {
+export class RegistrarComponent {
   username = '';
   password = '';
   empresaId = '';
 
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService, private router: Router) {}
 
   registrar(): void {
     const senhaValida = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{8,}$/;
@@ -34,16 +37,19 @@ export class Registrar {
       return;
     }
 
-    const user = { username: this.username, password: this.password, empresaId: this.empresaId };
+    const user = {
+      username: this.username,
+      password: this.password,
+      empresaId: this.empresaId,
+    };
 
     this.authService.registrar(user).subscribe({
       next: () => this.router.navigate(['/login']),
-      error: () => alert('Erro ao registrar usuário!')
+      error: () => alert('Erro ao registrar usuário!'),
     });
   }
 
   cancelar(): void {
     this.router.navigate(['/login']);
   }
-
 }

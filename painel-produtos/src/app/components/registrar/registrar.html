@@ -16,16 +16,20 @@
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>ID da Empresa</mat-label>
-      <input matInput [(ngModel)]="empresaId" required placeholder="Ex: empresa-teste" matTooltip="ID usado para compartilhar dados entre usuários da mesma empresa"/>
-      <mat-hint>Use um identificador simples e consistente</mat-hint>
+      <input matInput [(ngModel)]="empresaId" required placeholder="Ex: empresa-teste" matTooltip="ID usado para vincular usuários e clientes à mesma empresa"/>
+      <mat-hint>Esse ID deve ser o mesmo usado para cadastrar o número do WhatsApp</mat-hint>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" class="full-width" (click)="registrar()"
-      [disabled]="!username || !password">
+    <button mat-raised-button color="primary" class="full-width" (click)="registrar()" [disabled]="!username || !password || !empresaId">
       Registrar
     </button>
+
     <button mat-raised-button color="warn" type="button" (click)="cancelar()">
       Cancelar
+    </button>
+
+    <button mat-button color="accent" [routerLink]="['/registrar-numero']" class="full-width">
+      Registrar número do WhatsApp
     </button>
   </div>
 </div>
