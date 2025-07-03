@@ -6,8 +6,8 @@ import { Cliente } from '../../interfaces/cliente.model';
 
 @Component({
   selector: 'app-registrar-numero',
-  templateUrl: './registrar-numero.component.html',
-  styleUrls: ['./registrar-numero.component.scss']
+  templateUrl: './registrar-numero.html',
+  styleUrls: ['./registrar-numero.scss']
 })
 export class RegistrarNumeroComponent {
   numero = '';
