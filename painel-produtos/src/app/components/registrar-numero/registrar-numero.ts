@@ -3,9 +3,23 @@ import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BACKEND_BASE_URL } from '../../services/api';
 import { Cliente } from '../../interfaces/cliente.model';
+import { CommonModule } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-registrar-numero',
+    imports: [
+    CommonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    FormsModule,
+    MatTooltipModule,
+  ],
   templateUrl: './registrar-numero.html',
   styleUrls: ['./registrar-numero.scss']
 })
