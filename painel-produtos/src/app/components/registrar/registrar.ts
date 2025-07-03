@@ -19,8 +19,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     FormsModule,
     MatTooltipModule,
   ],
-  templateUrl: './registrar.component.html',
-  styleUrls: ['./registrar.component.scss'],
+  templateUrl: './registrar.html',
+  styleUrls: ['./registrar.scss'],
 })
 export class RegistrarComponent {
   username = '';
