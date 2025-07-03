@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BACKEND_BASE_URL } from '../../services/api';
 import { Cliente } from '../../interfaces/cliente.model';
@@ -19,6 +19,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatButtonModule,
     FormsModule,
     MatTooltipModule,
+    RouterModule
   ],
   templateUrl: './registrar-numero.html',
   styleUrls: ['./registrar-numero.scss']

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -18,6 +18,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatButtonModule,
     FormsModule,
     MatTooltipModule,
+    RouterModule
   ],
   templateUrl: './registrar.html',
   styleUrls: ['./registrar.scss'],
